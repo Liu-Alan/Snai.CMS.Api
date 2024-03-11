@@ -1,1 +1,2 @@
-# Snai.CMS.Go
+# Snai.CMS.Api
+内容管理Api
