@@ -4,6 +4,6 @@
     "log.level": 1,
     "log.targets": 3,
     "log.db": true,
-    "file.host":"storage",
+    "file.host":"./storage",
     "port": "8024"
   }

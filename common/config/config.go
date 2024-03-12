@@ -23,7 +23,6 @@ type Config struct {
 
 // InitConfig 初始化配置文件
 func InitConfig(path string) {
-
 	// 先加载基础配置，再加载不同环境下的配置文件
 	envs := []string{"develop", "test", "prerelease", "production"}
 	dir, file := filepath.Split(path)
