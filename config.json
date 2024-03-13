@@ -5,5 +5,9 @@
     "log.targets": 3,
     "log.db": true,
     "file.host":"./storage",
-    "port": "8024"
-  }
+    "port": "8024",
+    "pwd.salt": "snai",
+    "jwt.secret": "snai_2nL64",
+    "jwt.issuer": "snai_cms",
+    "jwt.expire": 7200
+}

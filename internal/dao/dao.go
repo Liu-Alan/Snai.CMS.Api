@@ -29,9 +29,9 @@ var newLogger = logger.New(
 func InitDB() {
 	var err error
 	//初始化cms
-	_cmsdb, err = gorm.Open(mysql.Open(config.GetConf.CmsDB), &gorm.Config{Logger: newLogger})
+	_cmsdb, err = gorm.Open(mysql.Open(config.AppConf.CmsDB), &gorm.Config{Logger: newLogger})
 	if err != nil {
-		logging.Fatal("gorm.Open(%v): %v", config.GetConf.CmsDB, err)
+		logging.Fatal("gorm.Open(%v): %v", config.AppConf.CmsDB, err)
 	}
 	_cmsdbM, _ := _cmsdb.DB()
 	_cmsdb.SetConnMaxLifetime(time.Second * 300)
