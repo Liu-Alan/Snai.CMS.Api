@@ -34,9 +34,9 @@ func InitDB() {
 		logging.Fatal("gorm.Open(%v): %v", config.AppConf.CmsDB, err)
 	}
 	_cmsdbM, _ := _cmsdb.DB()
-	_cmsdb.SetConnMaxLifetime(time.Second * 300)
-	_cmsdb.SetMaxIdleConns(5)
-	_cmsdb.SetMaxOpenConns(100)
+	_cmsdbM.SetConnMaxLifetime(time.Second * 300)
+	_cmsdbM.SetMaxIdleConns(5)
+	_cmsdbM.SetMaxOpenConns(100)
 	logging.Info("cms库连接成功")
 }
 

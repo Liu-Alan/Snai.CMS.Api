@@ -13,7 +13,7 @@ CREATE TABLE admins(
 	user_name NVARCHAR(32) NOT NULL,
 	`password` VARCHAR(32) NOT NULL,
 	role_id INT NOT NULL,
-	state TINYINT NOT NULL DEFAULT 1,			-- 1 启用，2 禁用
+	state SMALLINT NOT NULL DEFAULT 1,			-- 1 启用，2 禁用
 	create_time INT NOT NULL DEFAULT 0,
 	update_time INT NOT NULL DEFAULT 0,
 	last_logon_time INT NOT NULL DEFAULT 0,
@@ -39,7 +39,7 @@ CREATE TABLE modules(
 	title NVARCHAR(32) not NULL,
 	router NVARCHAR(64) not NULL DEFAULT '',
 	sort int not NULL DEFAULT 1,     			-- 小排在前
-	state TINYINT NOT NULL DEFAULT 1			-- 1 启用，2 禁用
+	state SMALLINT NOT NULL DEFAULT 1			-- 1 启用，2 禁用
 )
 ;
 
@@ -70,7 +70,7 @@ UNION ALL select 16,12,'分配权限','ModifyRoleRight',13,1
 CREATE TABLE roles(
 	id int AUTO_INCREMENT PRIMARY KEY,
 	title NVARCHAR(32) not NULL,
-	state TINYINT NOT NULL DEFAULT 1			-- 1 启用，2 禁用
+	state SMALLINT NOT NULL DEFAULT 1			-- 1 启用，2 禁用
 )
 ;
 

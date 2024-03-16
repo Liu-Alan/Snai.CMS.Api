@@ -1,11 +1,10 @@
 package main
 
 import (
-	"net/http"
-
 	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/common/logger"
 	"Snai.CMS.Api/internal/dao"
+	"Snai.CMS.Api/internal/router"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,12 +30,6 @@ func init() {
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 
-	r := gin.New()
-	r.Use(gin.Recovery())
-
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "service run")
-	})
-
+	r := router.NewRouter()
 	r.Run(":" + config.AppConf.Port)
 }
