@@ -5,6 +5,7 @@ import (
 
 	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/msg"
+	"Snai.CMS.Api/internal/service"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -38,6 +39,12 @@ func Jwt() gin.HandlerFunc {
 					case jwt.ValidationErrorExpired:
 						ecode = msg.Message{Code: msg.AuthCheckTimeout, Msg: msg.GetMsg(msg.AuthCheckTimeout)}
 					default:
+						ecode = msg.Message{Code: msg.AuthCheckFail, Msg: msg.GetMsg(msg.AuthCheckFail)}
+					}
+				} else {
+					// token是否已退出
+					tk, _ := service.GetToken(token)
+					if tk == nil || tk.State == 2 {
 						ecode = msg.Message{Code: msg.AuthCheckFail, Msg: msg.GetMsg(msg.AuthCheckFail)}
 					}
 				}

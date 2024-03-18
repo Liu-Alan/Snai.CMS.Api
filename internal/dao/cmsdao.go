@@ -15,6 +15,16 @@ func GetAdmin(userName string) (*entity.Admins, error) {
 	return &admin, nil
 }
 
+func GetToken(token string) (*entity.Tokens, error) {
+	tx := _cmsdb.Where("token = ? ", token)
+	var tk entity.Tokens
+	err := tx.First(&tk).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &tk, nil
+}
+
 func GetRole(roleID int) (*entity.Roles, error) {
 	tx := _cmsdb.Where("id = ? ", roleID)
 	var role entity.Roles

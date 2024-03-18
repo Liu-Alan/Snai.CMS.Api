@@ -3,7 +3,7 @@ package entity
 type Admins struct {
 	ID              int    `gorm:"column:id"`
 	UserName        string `gorm:"column:user_name"`
-	PassWord        string `gorm:"column:password"`
+	Password        string `gorm:"column:password"`
 	RoleID          int    `gorm:"column:role_id"`
 	State           int16  `gorm:"column:state"`
 	CreateTime      int    `gorm:"column:create_time"`
@@ -17,6 +17,18 @@ type Admins struct {
 
 func (Admins) TableName() string {
 	return "admins"
+}
+
+type Tokens struct {
+	ID         int    `gorm:"column:id"`
+	Token      string `gorm:"column:token"`
+	UserID     int    `gorm:"column:user_id"`
+	State      int16  `gorm:"column:state"`
+	CreateTime int    `gorm:"column:create_time"`
+}
+
+func (Tokens) TableName() string {
+	return "tokens"
 }
 
 type Roles struct {
