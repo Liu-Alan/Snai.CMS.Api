@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/msg"
 	"Snai.CMS.Api/internal/service"
 	"github.com/gin-gonic/gin"
@@ -13,6 +14,8 @@ func Auth() gin.HandlerFunc {
 
 		err := service.VerifyUserRole(username, router)
 		if err.Code != msg.Success {
+			response := app.NewResponse(c)
+			response.ToErrorResponse(err)
 			c.Abort()
 			return
 		}

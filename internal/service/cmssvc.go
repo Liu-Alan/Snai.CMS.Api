@@ -8,81 +8,81 @@ import (
 	"Snai.CMS.Api/internal/entity"
 )
 
-func GetAdmin(userName string) (*entity.Admins, msg.Message) {
+func GetAdmin(userName string) (*entity.Admins, *msg.Message) {
 	err := msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 
 	if strings.TrimSpace(userName) == "" {
-		return nil, msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
+		return nil, &msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
 	}
 	admin, _ := dao.GetAdmin(userName)
 	if admin == nil || admin.ID <= 0 {
-		return nil, msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return nil, &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
-	return admin, err
+	return admin, &err
 }
 
-func GetToken(token string) (*entity.Tokens, msg.Message) {
+func GetToken(token string) (*entity.Tokens, *msg.Message) {
 	err := msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 
 	if strings.TrimSpace(token) == "" {
-		return nil, msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
+		return nil, &msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
 	}
 	tk, _ := dao.GetToken(token)
 	if tk == nil || tk.ID <= 0 {
-		return nil, msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return nil, &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
-	return tk, err
+	return tk, &err
 }
 
-func GetRole(roleID int) (*entity.Roles, msg.Message) {
+func GetRole(roleID int) (*entity.Roles, *msg.Message) {
 	err := msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 
 	if roleID <= 0 {
-		return nil, msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
+		return nil, &msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
 	}
 	role, _ := dao.GetRole(roleID)
 	if role == nil || role.ID <= 0 {
-		return nil, msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return nil, &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
-	return role, err
+	return role, &err
 }
 
-func GetModule(router string) (*entity.Modules, msg.Message) {
+func GetModule(router string) (*entity.Modules, *msg.Message) {
 	err := msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 
 	if strings.TrimSpace(router) == "" {
-		return nil, msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
+		return nil, &msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
 	}
 	module, _ := dao.GetModule(router)
 	if module == nil || module.ID <= 0 {
-		return nil, msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return nil, &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
-	return module, err
+	return module, &err
 }
 
-func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, msg.Message) {
+func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, *msg.Message) {
 	err := msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 
 	if roleID <= 0 || moduleID <= 0 {
-		return nil, msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
+		return nil, &msg.Message{Code: msg.InvalidParams, Msg: msg.GetMsg(msg.InvalidParams)}
 	}
 	roleModule, _ := dao.GetRoleModule(roleID, moduleID)
 	if roleModule == nil || roleModule.ID <= 0 {
-		return nil, msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return nil, &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
-	return roleModule, err
+	return roleModule, &err
 }
 
 // 判断权限
-func VerifyUserRole(userName string, router string) msg.Message {
-	err := msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
+func VerifyUserRole(userName string, router string) *msg.Message {
+	err := &msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 
 	admin, err := GetAdmin(userName)
 	if admin == nil {
 		return err
 	}
 	if admin.State == 2 {
-		return msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
 
 	role, err := GetRole(admin.RoleID)
@@ -90,7 +90,7 @@ func VerifyUserRole(userName string, router string) msg.Message {
 		return err
 	}
 	if role.State == 2 {
-		return msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
 
 	module, err := GetModule(router)
@@ -98,7 +98,7 @@ func VerifyUserRole(userName string, router string) msg.Message {
 		return err
 	}
 	if module.State == 2 {
-		return msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
+		return &msg.Message{Code: msg.RecordNotFound, Msg: msg.GetMsg(msg.RecordNotFound)}
 	}
 
 	// 为-1不验证权限
@@ -108,7 +108,7 @@ func VerifyUserRole(userName string, router string) msg.Message {
 
 	roleModule, err := GetRoleModule(role.ID, module.ID)
 	if roleModule == nil {
-		return msg.Message{Code: msg.PermissionFailed, Msg: msg.GetMsg(msg.PermissionFailed)}
+		return &msg.Message{Code: msg.PermissionFailed, Msg: msg.GetMsg(msg.PermissionFailed)}
 	}
 
 	return err

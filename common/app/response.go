@@ -27,5 +27,10 @@ func (r *Response) ToResponse(result *msg.Message) {
 
 func (r *Response) ToErrorResponse(err *msg.Message) {
 	response := gin.H{"code": err.Code, "msg": err.Msg}
-	r.Ctx.JSON(err.Code, response)
+	httpStatus := err.Code
+	if err.Code > 500 {
+		httpStatus = msg.Error
+	}
+
+	r.Ctx.JSON(httpStatus, response)
 }

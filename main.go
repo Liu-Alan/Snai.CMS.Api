@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/common/logging"
 	"Snai.CMS.Api/internal/dao"
@@ -9,8 +10,6 @@ import (
 )
 
 func init() {
-	// 补始化验证
-
 	// 初始化配置
 	config.InitConfig("./config.json")
 	// 初始化log
@@ -22,6 +21,9 @@ func init() {
 
 	// 初始化数据库
 	dao.InitDB()
+
+	// 补始化验证
+	app.InitValidator()
 
 	logging.Info("服务启动,监听端口: %s", config.AppConf.Port)
 	logging.Warn("当前环境: %v", config.AppConf.Env)
