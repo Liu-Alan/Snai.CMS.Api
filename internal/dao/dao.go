@@ -5,8 +5,8 @@ import (
 
 	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/common/logging"
-	"github.com/jinzhu/gorm"
 	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 

@@ -16,7 +16,6 @@ func Jwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var (
 			authStr string
-			mc      *app.Claims
 			ecode   = msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
 		)
 		if s, exist := c.GetQuery("Authorization"); exist {
@@ -46,6 +45,8 @@ func Jwt() gin.HandlerFunc {
 					tk, _ := service.GetToken(token)
 					if tk == nil || tk.State == 2 {
 						ecode = msg.Message{Code: msg.AuthCheckFail, Msg: msg.GetMsg(msg.AuthCheckFail)}
+					} else {
+						c.Set("user_name", mc.UserName)
 					}
 				}
 			}
@@ -58,7 +59,6 @@ func Jwt() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user_name", mc.UserName)
 		c.Next()
 	}
 }
