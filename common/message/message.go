@@ -1,4 +1,4 @@
-package msg
+package message
 
 type Message struct {
 	Code   int         `json:"code"`

@@ -2,7 +2,7 @@ package app
 
 import (
 	"Snai.CMS.Api/common/logging"
-	"Snai.CMS.Api/common/msg"
+	"Snai.CMS.Api/common/message"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
@@ -25,7 +25,7 @@ func InitValidator() {
 	}
 }
 
-func BindAndValid(c *gin.Context, params interface{}, bindType string) *msg.Message {
+func BindAndValid(c *gin.Context, params interface{}, bindType string) *message.Message {
 	var err error
 
 	//绑定
@@ -35,7 +35,7 @@ func BindAndValid(c *gin.Context, params interface{}, bindType string) *msg.Mess
 		err = c.Bind(params)
 	}
 	if err != nil {
-		return &msg.Message{Code: msg.BindParamsError, Msg: msg.GetMsg(msg.BindParamsError)}
+		return &message.Message{Code: message.BindParamsError, Msg: message.GetMsg(message.BindParamsError)}
 	}
 
 	//校验
@@ -44,14 +44,14 @@ func BindAndValid(c *gin.Context, params interface{}, bindType string) *msg.Mess
 		verrs, ok := errs.(validator.ValidationErrors)
 		if !ok {
 			logging.Error("InvalidValidationError")
-			return &msg.Message{Code: msg.ValidParamsError, Msg: msg.GetMsg(msg.ValidParamsError)}
+			return &message.Message{Code: message.ValidParamsError, Msg: message.GetMsg(message.ValidParamsError)}
 		}
 		var errStr []string
 		for errv := range verrs.Translate(trans) {
 			errStr = append(errStr, errv)
 		}
-		return &msg.Message{Code: msg.ValidParamsError, Msg: msg.GetMsg(msg.ValidParamsError), Result: errStr}
+		return &message.Message{Code: message.ValidParamsError, Msg: message.GetMsg(message.ValidParamsError), Result: errStr}
 	}
 
-	return &msg.Message{Code: msg.Success, Msg: msg.GetMsg(msg.Success)}
+	return &message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 }

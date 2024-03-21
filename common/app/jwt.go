@@ -17,12 +17,10 @@ func GetJwtSecret() []byte {
 }
 
 func GenerateToken(userName string) (string, error) {
-	nowTime := time.Now()
-	expireTime := nowTime.Add(config.AppConf.JwtExpire)
 	claims := Claims{
 		UserName: userName,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expireTime.Unix(),
+			ExpiresAt: time.Now().Unix() + int64(config.AppConf.JwtExpire),
 			Issuer:    config.AppConf.JwtIssuer,
 		},
 	}

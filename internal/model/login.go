@@ -8,3 +8,9 @@ type LoginIn struct {
 type LoginOut struct {
 	Token string `json:"token"`
 }
+
+type ChangePasswordIn struct {
+	OldPassword string `form:"old_password" validate:"required"`
+	Password    string `form:"password" validate:"max=20,min=6"`
+	Password2   string `form:"password2" validate:"eqfield=Password"`
+}

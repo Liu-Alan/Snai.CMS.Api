@@ -6,24 +6,25 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 var AppConf = &Config{}
 
 // Config 系统配置
 type Config struct {
-	Env        string        `json:"env"`
-	CmsDB      string        `json:"cms.db"`
-	LogLevel   int           `json:"log.level"`
-	LogTargets int           `json:"log.targets"`
-	LogDB      bool          `json:"log.db"`
-	FileHost   string        `json:"file.host"`
-	Port       string        `json:"port"`
-	PwdSalt    string        `json:"pwd.salt"`
-	JwtSecret  string        `json:"jwt.secret"`
-	JwtIssuer  string        `json:"jwt.issuer"`
-	JwtExpire  time.Duration `json:"jwt.expire"`
+	Env             string `json:"env"`
+	CmsDB           string `json:"cms.db"`
+	LogLevel        int    `json:"log.level"`
+	LogTargets      int    `json:"log.targets"`
+	LogDB           bool   `json:"log.db"`
+	FileHost        string `json:"file.host"`
+	Port            string `json:"port"`
+	PwdSalt         string `json:"pwd.salt"`
+	JwtSecret       string `json:"jwt.secret"`
+	JwtIssuer       string `json:"jwt.issuer"`
+	JwtExpire       int    `json:"jwt.expire"`
+	LoginLockMinute int    `json:"login.lockminute"`
+	LoginErrorCount int    `json:"login.errorcount"`
 }
 
 // InitConfig 初始化配置文件

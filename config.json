@@ -1,6 +1,6 @@
 {
     "env": "本地服",
-    "cms.db": "root:as123@/snai_cms?charset=utf8&parseTime=True&loc=Local",
+    "cms.db": "root:as1028@/snai_cms?charset=utf8&parseTime=True&loc=Local",
     "log.level": 1,
     "log.targets": 3,
     "log.db": true,
@@ -9,5 +9,7 @@
     "pwd.salt": "snai",
     "jwt.secret": "snai_2nL64",
     "jwt.issuer": "snai_cms",
-    "jwt.expire": 7200
+    "jwt.expire": 7200,
+    "login.lockminute":30,
+    "login.errorcount":3
 }

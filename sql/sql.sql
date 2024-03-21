@@ -30,7 +30,7 @@ ALTER TABLE admins ADD UNIQUE INDEX ix_admins_user_name(user_name)  		-- UNIQUE 
 
 -- password:snai2024，保存时加盐md5(盐+password)
 INSERT into admins(user_name,`password`,role_id,state,create_time)
-VALUES('snai','86A6553DC16E23A7BB34B4306415C206',1,1,1550937600)
+VALUES('snai','86a6553dc16e23a7bb34b4306415c206',1,1,1550937600)
 ;
 
 CREATE TABLE tokens(
@@ -62,7 +62,7 @@ ALTER TABLE modules ADD INDEX ix_modules_router(router)
 
 INSERT into modules(id,parent_id,title,router,sort,state)
 select 1,-1,'修改密码','/api/changepassword',1,1
-select 2,-1,'退出','/api/logout',1,1
+UNION ALL select 2,-1,'退出','/api/logout',1,1
 UNION ALL select 3,0,'管理员管理','',10,1
 UNION ALL select 4,3,'账号管理','AdminList',11,1
 UNION ALL select 5,4,'添加修改账号','ModifyAdmin',11,1

@@ -1,7 +1,7 @@
 package app
 
 import (
-	"Snai.CMS.Api/common/msg"
+	"Snai.CMS.Api/common/message"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +13,7 @@ func NewResponse(ctx *gin.Context) *Response {
 	return &Response{Ctx: ctx}
 }
 
-func (r *Response) ToResponse(result *msg.Message) {
+func (r *Response) ToResponse(result *message.Message) {
 	data := gin.H{}
 	if result != nil {
 		data = gin.H{
@@ -22,14 +22,14 @@ func (r *Response) ToResponse(result *msg.Message) {
 			"result": result.Result,
 		}
 	}
-	r.Ctx.JSON(msg.Success, data)
+	r.Ctx.JSON(message.Success, data)
 }
 
-func (r *Response) ToErrorResponse(err *msg.Message) {
-	response := gin.H{"code": err.Code, "msg": err.Msg}
+func (r *Response) ToErrorResponse(err *message.Message) {
+	response := gin.H{"code": err.Code, "msg": err.Msg, "result": err.Result}
 	httpStatus := err.Code
 	if err.Code > 500 {
-		httpStatus = msg.Error
+		httpStatus = message.Error
 	}
 
 	r.Ctx.JSON(httpStatus, response)

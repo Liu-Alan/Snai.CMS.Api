@@ -1,4 +1,4 @@
-package msg
+package message
 
 const (
 	Success          = 200

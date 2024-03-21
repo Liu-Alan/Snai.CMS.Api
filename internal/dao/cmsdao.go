@@ -15,6 +15,13 @@ func GetAdmin(userName string) (*entity.Admins, error) {
 	return &admin, nil
 }
 
+func ModifyAdmin(admin *entity.Admins) error {
+	if err := _cmsdb.Save(admin).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetToken(token string) (*entity.Tokens, error) {
 	tx := _cmsdb.Where("token = ? ", token)
 	var tk entity.Tokens
@@ -23,6 +30,21 @@ func GetToken(token string) (*entity.Tokens, error) {
 		return nil, err
 	}
 	return &tk, nil
+}
+
+func AddToken(token *entity.Tokens) error {
+	if err := _cmsdb.Create(&token).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func ModifyToken(token *entity.Tokens) error {
+	if err := _cmsdb.Save(token).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func GetRole(roleID int) (*entity.Roles, error) {

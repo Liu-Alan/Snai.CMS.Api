@@ -1,4 +1,4 @@
-package msg
+package message
 
 // MsgInfo 定义code对应的msg
 var MsgInfo = map[int]string{
