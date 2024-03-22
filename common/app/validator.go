@@ -1,6 +1,9 @@
 package app
 
 import (
+	"reflect"
+	"strings"
+
 	"Snai.CMS.Api/common/logging"
 	"Snai.CMS.Api/common/message"
 	"github.com/gin-gonic/gin"
@@ -10,19 +13,47 @@ import (
 	zhTrans "github.com/go-playground/validator/v10/translations/zh"
 )
 
-var validate *validator.Validate
-var trans ut.Translator
+var G_Validate *validateCtx
+
+type validateCtx struct {
+	*validator.Validate
+	trans ut.Translator
+}
 
 func InitValidator() {
-	validate = validator.New()
+	validate := validator.New()
 	// 中文翻译器
 	uniTrans := ut.New(zh.New())
-	trans, _ = uniTrans.GetTranslator("zh")
+	trans, _ := uniTrans.GetTranslator("zh")
+
+	//通过自定义标签label来替换字段名
+	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("label"), ",", 2)[0]
+		if name == "-" {
+			return ""
+		}
+		return name
+	})
+
 	// 注册翻译器到验证器
 	err := zhTrans.RegisterDefaultTranslations(validate, trans)
 	if err != nil {
 		logging.Error("registerDefaultTranslations fail: %s\n", err.Error())
 	}
+
+	G_Validate = &validateCtx{validate, trans}
+}
+
+func (vc *validateCtx) GetError(errs error) []string {
+	var errStr []string
+	for _, err := range errs.(validator.ValidationErrors) {
+		if vc.trans != nil {
+			errStr = append(errStr, strings.Replace(err.Translate(vc.trans), "Password", "密码", -1))
+		} else {
+			errStr = append(errStr, err.Field()+"验证不符合"+err.Tag())
+		}
+	}
+	return errStr
 }
 
 func BindAndValid(c *gin.Context, params interface{}, bindType string) *message.Message {
@@ -39,17 +70,9 @@ func BindAndValid(c *gin.Context, params interface{}, bindType string) *message.
 	}
 
 	//校验
-	errs := validate.Struct(params)
+	errs := G_Validate.Struct(params)
 	if errs != nil {
-		verrs, ok := errs.(validator.ValidationErrors)
-		if !ok {
-			logging.Error("InvalidValidationError")
-			return &message.Message{Code: message.ValidParamsError, Msg: message.GetMsg(message.ValidParamsError)}
-		}
-		var errStr []string
-		for errv := range verrs.Translate(trans) {
-			errStr = append(errStr, errv)
-		}
+		errStr := G_Validate.GetError(errs)
 		return &message.Message{Code: message.ValidParamsError, Msg: message.GetMsg(message.ValidParamsError), Result: errStr}
 	}
 
