@@ -3,6 +3,7 @@ package router
 import (
 	"net/http"
 
+	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/internal/api"
 	"Snai.CMS.Api/internal/middleware"
 	"github.com/gin-gonic/gin"
@@ -18,9 +19,14 @@ func NewRouter() *gin.Engine {
 
 	r.POST("/api/login", api.LoginHandler)
 
+	rj := r.Group("/api").Use(middleware.Jwt())
+	rj.StaticFS("/static", http.Dir(config.AppConf.FileHost+"/file"))
+
 	rr := r.Group("/api").Use(middleware.Jwt(), middleware.Auth())
 	rr.POST("/logout", api.LogoutHandler)
 	rr.POST("/changepassword", api.ChangePasswordHandler)
+
+	rr.GET("/admins", api.AdminsHandler)
 
 	return r
 }

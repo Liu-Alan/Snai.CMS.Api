@@ -5,6 +5,7 @@ import (
 	"strings"
 	"time"
 
+	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/common/message"
 	"Snai.CMS.Api/common/utils"
@@ -24,6 +25,25 @@ func GetAdmin(userName string) (*entity.Admins, *message.Message) {
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
 	return admin, &err
+}
+
+func GetAdminCount(userName string) int64 {
+	count, _ := dao.GetAdminCount(userName)
+	return count
+}
+
+func GetAdminList(userName string, page, pageSize int) ([]*entity.Admins, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	pageOffset := app.GetPageOffset(page, pageSize)
+	admins, _ := dao.GetAdminList(userName, pageOffset, pageSize)
+	if admins == nil || len(admins) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	for k := range admins {
+		admins[k].Password = ""
+	}
+	return admins, &err
 }
 
 func ModifyAdmin(admin *entity.Admins) *message.Message {
@@ -210,27 +230,36 @@ func VerifyUserRole(userName string, router string) *message.Message {
 	err := &message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
 	admin, err := GetAdmin(userName)
+	if err.Code == message.RecordNotFound {
+		return &message.Message{Code: message.RecordNotFound, Msg: "账号不存在"}
+	}
 	if admin == nil {
 		return err
 	}
 	if admin.State == 2 {
-		return &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+		return &message.Message{Code: message.RecordNotFound, Msg: "账号已禁用"}
 	}
 
 	role, err := GetRole(admin.RoleID)
+	if err.Code == message.RecordNotFound {
+		return &message.Message{Code: message.RecordNotFound, Msg: "角色不存在"}
+	}
 	if role == nil {
 		return err
 	}
 	if role.State == 2 {
-		return &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+		return &message.Message{Code: message.RecordNotFound, Msg: "角色已禁用"}
 	}
 
 	module, err := GetModule(router)
+	if err.Code == message.RecordNotFound {
+		return &message.Message{Code: message.RecordNotFound, Msg: "模块不存在"}
+	}
 	if module == nil {
 		return err
 	}
 	if module.State == 2 {
-		return &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+		return &message.Message{Code: message.RecordNotFound, Msg: "模块已禁用"}
 	}
 
 	// 为-1不验证权限

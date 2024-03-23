@@ -15,6 +15,37 @@ func GetAdmin(userName string) (*entity.Admins, error) {
 	return &admin, nil
 }
 
+func GetAdminCount(userName string) (int64, error) {
+	tx := _cmsdb
+	if userName != "" {
+		tx = _cmsdb.Where("user_name like ? ", "%"+userName+"%")
+	}
+
+	var count int64
+	var admin entity.Admins
+	err := tx.Model(&admin).Count(&count).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return 0, err
+	}
+	return count, nil
+}
+
+func GetAdminList(userName string, pageOffset, pageSize int) ([]*entity.Admins, error) {
+	tx := _cmsdb
+	if userName != "" {
+		tx = _cmsdb.Where("user_name like ? ", "%"+userName+"%")
+	}
+	if pageOffset >= 0 && pageSize > 0 {
+		tx = tx.Offset(pageOffset).Limit(pageSize)
+	}
+	var admins []*entity.Admins
+	err := tx.Find(&admins).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return admins, nil
+}
+
 func ModifyAdmin(admin *entity.Admins) error {
 	if err := _cmsdb.Save(admin).Error; err != nil {
 		return err

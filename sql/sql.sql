@@ -64,20 +64,20 @@ INSERT into modules(id,parent_id,title,router,sort,state)
 select 1,-1,'修改密码','/api/changepassword',1,1
 UNION ALL select 2,-1,'退出','/api/logout',1,1
 UNION ALL select 3,0,'管理员管理','',10,1
-UNION ALL select 4,3,'账号管理','AdminList',11,1
-UNION ALL select 5,4,'添加修改账号','ModifyAdmin',11,1
-UNION ALL select 6,4,'禁启用账号','UpdateAdminState',11,1
-UNION ALL select 7,4,'解锁账号','UnlockAdmin',11,1
-UNION ALL select 8,4,'删除账号','DeleteAdmin',11,1
-UNION ALL select 9,3,'菜单管理','ModuleList',12,1
-UNION ALL select 10,9,'添加修改菜单','ModifyModule',12,1
-UNION ALL select 11,9,'禁启用菜单','UpdateModuleState',12,1
-UNION ALL select 12,9,'删除菜单','DeleteModule',12,1
-UNION ALL select 13,3,'角色管理','RoleList',13,1
-UNION ALL select 14,13,'添加修改角色','ModifyRole',13,1
-UNION ALL select 15,13,'禁启用角色','UpdateRoleState',13,1
-UNION ALL select 16,13,'删除角色','DeleteRole',13,1
-UNION ALL select 17,13,'分配权限','ModifyRoleRight',13,1
+UNION ALL select 4,4,'账号管理','/api/admins',11,1
+UNION ALL select 5,5,'添加修改账号','ModifyAdmin',11,1
+UNION ALL select 6,5,'禁启用账号','UpdateAdminState',11,1
+UNION ALL select 7,5,'解锁账号','UnlockAdmin',11,1
+UNION ALL select 8,5,'删除账号','DeleteAdmin',11,1
+UNION ALL select 9,4,'菜单管理','ModuleList',12,1
+UNION ALL select 10,10,'添加修改菜单','ModifyModule',12,1
+UNION ALL select 11,10,'禁启用菜单','UpdateModuleState',12,1
+UNION ALL select 12,10,'删除菜单','DeleteModule',12,1
+UNION ALL select 13,4,'角色管理','RoleList',13,1
+UNION ALL select 14,14,'添加修改角色','ModifyRole',13,1
+UNION ALL select 15,14,'禁启用角色','UpdateRoleState',13,1
+UNION ALL select 16,14,'删除角色','DeleteRole',13,1
+UNION ALL select 17,14,'分配权限','ModifyRoleRight',13,1
 ;
 
 CREATE TABLE roles(

@@ -34,3 +34,20 @@ func (r *Response) ToErrorResponse(err *message.Message) {
 
 	r.Ctx.JSON(httpStatus, response)
 }
+
+// ResponsePage 分页返回
+type ResponsePage struct {
+	Page     int         `json:"page"`
+	PageSize int         `json:"page_size"`
+	Total    int64       `json:"total"`
+	List     interface{} `json:"list"`
+}
+
+// ResponsePage 分页返回JSON
+func (r *Response) ResponsePage(rePage *ResponsePage) {
+	r.Ctx.JSON(message.Success, gin.H{
+		"code":   message.Success,
+		"msg":    message.GetMsg(message.Success),
+		"result": rePage,
+	})
+}

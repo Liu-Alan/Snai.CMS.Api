@@ -1,7 +1,7 @@
 package model
 
 type LoginIn struct {
-	UserName string `form:"user_name" validate:"required" label:"用户名"`
+	UserName string `form:"user_name" validate:"required,max=32" label:"用户名"`
 	Password string `form:"password" validate:"required" label:"密码"`
 }
 

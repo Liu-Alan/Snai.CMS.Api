@@ -11,5 +11,7 @@
     "jwt.issuer": "snai_cms",
     "jwt.expire": 7200,
     "login.lockminute":30,
-    "login.errorcount":3
+    "login.errorcount":3,
+    "defaultpagesize":10,
+    "maxpagesize":50
 }

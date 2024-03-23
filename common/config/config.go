@@ -25,6 +25,8 @@ type Config struct {
 	JwtExpire       int    `json:"jwt.expire"`
 	LoginLockMinute int    `json:"login.lockminute"`
 	LoginErrorCount int    `json:"login.errorcount"`
+	DefaultPageSize int    `json:"defaultpagesize"`
+	MaxPageSize     int    `json:"maxpagesize"`
 }
 
 // InitConfig 初始化配置文件
