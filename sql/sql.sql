@@ -65,6 +65,7 @@ select 1,-1,'修改密码','/api/changepassword',1,1
 UNION ALL select 2,-1,'退出','/api/logout',1,1
 UNION ALL select 3,0,'管理员管理','',10,1
 UNION ALL select 4,4,'账号管理','/api/admins',11,1
+/*
 UNION ALL select 5,5,'添加修改账号','ModifyAdmin',11,1
 UNION ALL select 6,5,'禁启用账号','UpdateAdminState',11,1
 UNION ALL select 7,5,'解锁账号','UnlockAdmin',11,1
@@ -78,6 +79,7 @@ UNION ALL select 14,14,'添加修改角色','ModifyRole',13,1
 UNION ALL select 15,14,'禁启用角色','UpdateRoleState',13,1
 UNION ALL select 16,14,'删除角色','DeleteRole',13,1
 UNION ALL select 17,14,'分配权限','ModifyRoleRight',13,1
+*/
 ;
 
 CREATE TABLE roles(
@@ -107,6 +109,7 @@ ALTER TABLE role_module ADD UNIQUE INDEX ix_role_module_role_id_module_id(role_i
 INSERT into role_module(role_id,module_id)
 select 1,3
 UNION ALL select 1,4
+/*
 UNION ALL select 1,5
 UNION ALL select 1,6
 UNION ALL select 1,7
@@ -120,4 +123,5 @@ UNION ALL select 1,14
 UNION ALL select 1,15
 UNION ALL select 1,16
 UNION ALL select 1,17
+*/
 ;
