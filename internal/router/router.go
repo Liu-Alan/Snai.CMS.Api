@@ -17,16 +17,16 @@ func NewRouter() *gin.Engine {
 		c.String(http.StatusOK, "service run")
 	})
 
-	r.POST("/api/login", api.LoginHandler)
+	r.POST("/api/home/login", api.LoginHandler)
 
 	rj := r.Group("/api").Use(middleware.Jwt())
 	rj.StaticFS("/static", http.Dir(config.AppConf.FileHost+"/file"))
 
 	rr := r.Group("/api").Use(middleware.Jwt(), middleware.Auth())
-	rr.POST("/logout", api.LogoutHandler)
-	rr.POST("/changepassword", api.ChangePasswordHandler)
+	rr.POST("/home/logout", api.LogoutHandler)
+	rr.POST("/home/changepassword", api.ChangePasswordHandler)
 
-	rr.GET("/admins", api.AdminsHandler)
+	rr.GET("/admin/list", api.AdminListHandler)
 
 	return r
 }

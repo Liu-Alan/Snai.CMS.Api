@@ -61,10 +61,10 @@ ALTER TABLE modules ADD INDEX ix_modules_router(router)
 ;
 
 INSERT into modules(id,parent_id,title,router,sort,state)
-select 1,-1,'修改密码','/api/changepassword',1,1
-UNION ALL select 2,-1,'退出','/api/logout',1,1
+select 1,-1,'修改密码','/api/home/changepassword',1,1
+UNION ALL select 2,-1,'退出','/api/home/logout',1,1
 UNION ALL select 3,0,'管理员管理','',10,1
-UNION ALL select 4,4,'账号管理','/api/admins',11,1
+UNION ALL select 4,4,'账号管理','/api/admin/list',11,1
 /*
 UNION ALL select 5,5,'添加修改账号','ModifyAdmin',11,1
 UNION ALL select 6,5,'禁启用账号','UpdateAdminState',11,1

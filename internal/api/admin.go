@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func AdminsHandler(c *gin.Context) {
+func AdminListHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 	var adminsIn model.AdminsIn
 
