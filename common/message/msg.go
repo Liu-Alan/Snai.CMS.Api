@@ -3,7 +3,8 @@ package message
 // MsgInfo 定义code对应的msg
 var MsgInfo = map[int]string{
 	Success:          "ok",
-	Error:            "fail",
+	Fail:             "fail",
+	Error:            "Error",
 	InvalidParams:    "参数错误",
 	BindParamsError:  "绑定参数错误",
 	ValidParamsError: "校验参数错误",

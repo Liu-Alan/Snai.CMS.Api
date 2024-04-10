@@ -50,13 +50,20 @@ func ModifyAdmin(admin *entity.Admins) *message.Message {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
 	if admin != nil && admin.ID > 0 {
-		if errm := dao.ModifyAdmin(admin); errm != nil {
+		reAdmin, _ := GetAdmin(admin.UserName)
+		if reAdmin != nil && admin.ID != reAdmin.ID {
 			err.Code = 400
-			err.Msg = "用户信息修改失败"
+			err.Msg = "用户名重复"
+			return &err
+		} else {
+			if errm := dao.ModifyAdmin(admin); errm != nil {
+				err.Code = 400
+				err.Msg = "用户信息修改失败"
+				return &err
+			}
+
 			return &err
 		}
-
-		return &err
 	} else {
 		err.Code = 400
 		err.Msg = "用户不存在"
