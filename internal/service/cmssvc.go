@@ -52,12 +52,12 @@ func ModifyAdmin(admin *entity.Admins) *message.Message {
 	if admin != nil && admin.ID > 0 {
 		reAdmin, _ := GetAdmin(admin.UserName)
 		if reAdmin != nil && admin.ID != reAdmin.ID {
-			err.Code = 400
+			err.Code = message.InvalidParams
 			err.Msg = "用户名重复"
 			return &err
 		} else {
 			if errm := dao.ModifyAdmin(admin); errm != nil {
-				err.Code = 400
+				err.Code = message.InvalidParams
 				err.Msg = "用户信息修改失败"
 				return &err
 			}
@@ -65,7 +65,7 @@ func ModifyAdmin(admin *entity.Admins) *message.Message {
 			return &err
 		}
 	} else {
-		err.Code = 400
+		err.Code = message.InvalidParams
 		err.Msg = "用户不存在"
 		return &err
 	}
@@ -74,19 +74,19 @@ func ModifyAdmin(admin *entity.Admins) *message.Message {
 func AdminLogin(loginIn *model.LoginIn, ip string) (*entity.Admins, *message.Message) {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 	if strings.TrimSpace(loginIn.UserName) == "" || strings.TrimSpace(loginIn.Password) == "" {
-		err.Code = 400
+		err.Code = message.InvalidParams
 		err.Msg = "用户名或密码不能为空"
 		return nil, &err
 	}
 	if len(loginIn.UserName) > 32 {
-		err.Code = 400
+		err.Code = message.InvalidParams
 		err.Msg = "用户名或密码不能为空"
 		return nil, &err
 	}
 
 	admin, _ := GetAdmin(loginIn.UserName)
 	if admin == nil {
-		err.Code = 400
+		err.Code = message.InvalidParams
 		err.Msg = "用户名或密码不能为空"
 		return nil, &err
 	}
@@ -169,14 +169,14 @@ func AddToken(token *entity.Tokens) *message.Message {
 
 	if token != nil && token.UserID > 0 {
 		if errm := dao.AddToken(token); errm != nil {
-			err.Code = 400
+			err.Code = message.InvalidParams
 			err.Msg = "保存Token失败"
 			return &err
 		}
 
 		return &err
 	} else {
-		err.Code = 400
+		err.Code = message.InvalidParams
 		err.Msg = "保存Token失败"
 		return &err
 	}
@@ -187,14 +187,14 @@ func ModifyToken(token *entity.Tokens) *message.Message {
 
 	if token != nil && token.ID > 0 {
 		if errm := dao.ModifyToken(token); errm != nil {
-			err.Code = 400
+			err.Code = message.InvalidParams
 			err.Msg = "Tokek修改失败"
 			return &err
 		}
 
 		return &err
 	} else {
-		err.Code = 400
+		err.Code = message.InvalidParams
 		err.Msg = "Tokek不存在"
 		return &err
 	}
