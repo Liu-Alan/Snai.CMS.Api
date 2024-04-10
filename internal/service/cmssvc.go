@@ -97,6 +97,13 @@ func AdminLogin(loginIn *model.LoginIn, ip string) (*entity.Admins, *message.Mes
 		return nil, &err
 	}
 
+	role, _ := GetRole(admin.RoleID)
+	if role == nil || role.ID <= 0 || role.State == 2 {
+		err.Code = message.Error
+		err.Msg = "用户角色禁用"
+		return nil, &err
+	}
+
 	pwd := strings.ToLower(utils.EncodeMD5(config.AppConf.PwdSalt + strings.TrimSpace(loginIn.Password)))
 	if admin.Password != pwd {
 		if admin.ErrorLogonTime+(config.AppConf.LoginLockMinute*60) < nowtime {
