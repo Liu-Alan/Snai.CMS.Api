@@ -22,7 +22,7 @@ func init() {
 	// 初始化数据库
 	dao.InitDB()
 
-	// 补始化验证
+	// 初始化验证
 	app.InitValidator()
 
 	logging.Info("服务启动,监听端口: %s", config.AppConf.Port)
