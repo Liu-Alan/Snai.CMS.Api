@@ -24,8 +24,8 @@ CREATE TABLE admins(
 )
 ;
 
--- alter table admins add primary key pk_admins (id)  						-- 主键			
-ALTER TABLE admins ADD UNIQUE INDEX ix_admins_user_name(user_name)  		-- UNIQUE INDEX 唯一索引
+-- alter table admins add primary key pk_admins (id)  					-- 主键			
+ALTER TABLE admins ADD UNIQUE INDEX ix_admins_user_name(user_name)  	-- UNIQUE INDEX 唯一索引
 ;
 
 -- password:snai2024，保存时加盐md5(盐+password)
