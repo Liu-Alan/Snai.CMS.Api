@@ -5,7 +5,7 @@ type Admins struct {
 	UserName        string `gorm:"column:user_name"`
 	Password        string `gorm:"column:password"`
 	RoleID          int    `gorm:"column:role_id"`
-	State           int16  `gorm:"column:state"`
+	State           int8   `gorm:"column:state"`
 	CreateTime      int    `gorm:"column:create_time"`
 	UpdateTime      int    `gorm:"column:update_time"`
 	LastLogonTime   int    `gorm:"column:last_logon_time"`
@@ -23,7 +23,7 @@ type Tokens struct {
 	ID         int    `gorm:"column:id"`
 	Token      string `gorm:"column:token"`
 	UserID     int    `gorm:"column:user_id"`
-	State      int16  `gorm:"column:state"`
+	State      int8   `gorm:"column:state"`
 	CreateTime int    `gorm:"column:create_time"`
 }
 
@@ -34,7 +34,7 @@ func (Tokens) TableName() string {
 type Roles struct {
 	ID    int    `gorm:"column:id"`
 	Title string `gorm:"column:title"`
-	State int16  `gorm:"column:state"`
+	State int8   `gorm:"column:state"`
 }
 
 func (Roles) TableName() string {
@@ -47,7 +47,7 @@ type Modules struct {
 	Title    string `gorm:"column:title"`
 	Router   string `gorm:"column:router"`
 	Sort     int    `gorm:"column:sort"`
-	State    int16  `gorm:"column:state"`
+	State    int8   `gorm:"column:state"`
 }
 
 func (Modules) TableName() string {
