@@ -6,7 +6,8 @@ type LoginIn struct {
 }
 
 type LoginOut struct {
-	Token string `json:"token"`
+	Token    string `json:"token"`
+	UserName string `json:"user_name"`
 }
 
 type ChangePasswordIn struct {

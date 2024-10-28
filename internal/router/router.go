@@ -12,6 +12,7 @@ import (
 func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
+	r.Use(middleware.Cors())
 
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "service run")

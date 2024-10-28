@@ -48,7 +48,7 @@ func LoginHandler(c *gin.Context) {
 			} else {
 				msg.Code = message.Success
 				msg.Msg = message.GetMsg(message.Success)
-				msg.Result = model.LoginOut{Token: token}
+				msg.Result = model.LoginOut{Token: token, UserName: admin.UserName}
 				response.ToResponse(msg)
 			}
 		}
