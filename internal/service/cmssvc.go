@@ -226,6 +226,19 @@ func GetModule(router string) (*entity.Modules, *message.Message) {
 	return module, &err
 }
 
+func GetModules(ids []int) ([]*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if ids == nil || len(ids) <= 0 {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	modules, _ := dao.GetModules(ids)
+	if modules == nil || len(modules) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return modules, &err
+}
+
 func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, *message.Message) {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
@@ -237,6 +250,17 @@ func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, *message.Messa
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
 	return roleModule, &err
+}
+
+func GetRoleModules(roleID int) ([]*entity.RoleModule, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	roleModules, _ := dao.GetRoleModules(roleID)
+	if roleModules == nil || len(roleModules) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+
+	return roleModules, &err
 }
 
 // 判断权限

@@ -49,9 +49,13 @@ CREATE TABLE modules(
 	id INT AUTO_INCREMENT PRIMARY KEY,
 	parent_id int not NULL DEFAULT 0,
 	title NVARCHAR(32) not NULL,
-	router NVARCHAR(64) not NULL DEFAULT '',
+	name NVARCHAR(32) not NULL DEFAULT '',		-- 用于前端判断是否显示，如创建，删除等
+	router NVARCHAR(64) not NULL DEFAULT '',	-- api路由
+	ui_router NVARCHAR(64) not NULL DEFAULT '', -- 前端路由
+	menu TINYINT NOT NULL DEFAULT 2,			-- 是否菜单：1 是，2 否
 	sort int not NULL DEFAULT 1,     			-- 小排在前
 	state TINYINT NOT NULL DEFAULT 1			-- 1 启用，2 禁用
+	
 )
 ;
 

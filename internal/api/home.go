@@ -110,3 +110,46 @@ func ChangePasswordHandler(c *gin.Context) {
 		}
 	}
 }
+
+func MenuHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	user_name := c.MustGet("user_name").(string)
+
+	admin, msg := service.GetAdmin(user_name)
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+	} else {
+		roleModules, msg := service.GetRoleModules(admin.RoleID)
+		if msg.Code != message.Success {
+			response.ToErrorResponse(msg)
+		} else {
+			var ids []int
+			for _, v := range roleModules {
+				ids = append(ids, v.ModuleID)
+			}
+			modules, msg := service.GetModules(ids)
+			if msg.Code != message.Success {
+				response.ToErrorResponse(msg)
+			} else {
+				var menus []*model.MenuOut
+				for _, module := range modules {
+					if module.State == 1 {
+						menu := model.MenuOut{
+							ID:       module.ID,
+							ParentID: module.ParentID,
+							Title:    module.Title,
+							Name:     module.Name,
+							Router:   module.Router,
+							UIRouter: module.UIRouter,
+							Menu:     module.Menu,
+							Sort:     module.Sort,
+						}
+						menus = append(menus, &menu)
+					}
+				}
+				msg.Result = menus
+				response.ToResponse(msg)
+			}
+		}
+	}
+}

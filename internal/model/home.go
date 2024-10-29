@@ -15,3 +15,14 @@ type ChangePasswordIn struct {
 	Password    string `form:"password" validate:"max=20,min=6" label:"新密码"`
 	Password2   string `form:"password2" validate:"eqfield=Password" label:"确认密码"`
 }
+
+type MenuOut struct {
+	ID       int    `json:"id"`
+	ParentID int    `json:"parent_id"`
+	Title    string `json:"title"`
+	Name     string `json:"name"`
+	Router   string `json:"router"`
+	UIRouter string `json:"ui_router"`
+	Menu     int8   `json:"menu"`
+	Sort     int    `json:"sort"`
+}

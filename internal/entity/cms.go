@@ -45,7 +45,10 @@ type Modules struct {
 	ID       int    `gorm:"column:id"`
 	ParentID int    `gorm:"column:parent_id"`
 	Title    string `gorm:"column:title"`
+	Name     string `gorm:"column:name"`
 	Router   string `gorm:"column:router"`
+	UIRouter string `gorm:"column:ui_router"`
+	Menu     int8   `gorm:"column:menu"`
 	Sort     int    `gorm:"column:sort"`
 	State    int8   `gorm:"column:state"`
 }

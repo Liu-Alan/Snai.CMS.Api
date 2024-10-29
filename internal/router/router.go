@@ -22,12 +22,13 @@ func NewRouter() *gin.Engine {
 
 	rj := r.Group("/api").Use(middleware.Jwt())
 	rj.StaticFS("/static", http.Dir(config.AppConf.FileHost+"/file"))
+	rj.GET("/home/menu", api.MenuHandler)
 
-	rr := r.Group("/api").Use(middleware.Jwt(), middleware.Auth())
-	rr.POST("/home/logout", api.LogoutHandler)
-	rr.POST("/home/changepassword", api.ChangePasswordHandler)
+	rja := r.Group("/api").Use(middleware.Jwt(), middleware.Auth())
+	rja.POST("/home/logout", api.LogoutHandler)
+	rja.POST("/home/changepassword", api.ChangePasswordHandler)
 
-	rr.GET("/admin/list", api.AdminListHandler)
+	rja.GET("/admin/list", api.AdminListHandler)
 
 	return r
 }

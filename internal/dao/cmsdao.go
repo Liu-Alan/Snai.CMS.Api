@@ -98,6 +98,16 @@ func GetModule(router string) (*entity.Modules, error) {
 	return &module, nil
 }
 
+func GetModules(ids []int) ([]*entity.Modules, error) {
+	tx := _cmsdb.Where("id in ? ", ids)
+	var modules []*entity.Modules
+	err := tx.Order("sort, id").Find(&modules).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return modules, nil
+}
+
 func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, error) {
 	tx := _cmsdb.Where("role_id = ? and module_id = ?", roleID, moduleID)
 	var roleModule entity.RoleModule
@@ -106,4 +116,14 @@ func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, error) {
 		return nil, err
 	}
 	return &roleModule, nil
+}
+
+func GetRoleModules(roleID int) ([]*entity.RoleModule, error) {
+	tx := _cmsdb.Where("role_id = ? ", roleID)
+	var roleModules []*entity.RoleModule
+	err := tx.Find(&roleModules).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return roleModules, nil
 }
