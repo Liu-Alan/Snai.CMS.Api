@@ -30,7 +30,7 @@ func GetAdminCount(userName string) (int64, error) {
 	return count, nil
 }
 
-func GetAdminList(userName string, pageOffset, pageSize int) ([]*entity.Admins, error) {
+func GetAdmins(userName string, pageOffset, pageSize int) ([]*entity.Admins, error) {
 	tx := _cmsdb
 	if userName != "" {
 		tx = _cmsdb.Where("user_name like ? ", "%"+userName+"%")
@@ -86,6 +86,19 @@ func GetRole(roleID int) (*entity.Roles, error) {
 		return nil, err
 	}
 	return &role, nil
+}
+
+func GetRoles(pageOffset, pageSize int) ([]*entity.Roles, error) {
+	tx := _cmsdb
+	if pageOffset >= 0 && pageSize > 0 {
+		tx = tx.Offset(pageOffset).Limit(pageSize)
+	}
+	var roles []*entity.Roles
+	err := tx.Find(&roles).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return roles, nil
 }
 
 func GetModule(router string) (*entity.Modules, error) {

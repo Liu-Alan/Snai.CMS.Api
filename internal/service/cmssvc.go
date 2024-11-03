@@ -32,11 +32,11 @@ func GetAdminCount(userName string) int64 {
 	return count
 }
 
-func GetAdminList(userName string, page, pageSize int) ([]*entity.Admins, *message.Message) {
+func GetAdmins(userName string, page, pageSize int) ([]*entity.Admins, *message.Message) {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
 	pageOffset := app.GetPageOffset(page, pageSize)
-	admins, _ := dao.GetAdminList(userName, pageOffset, pageSize)
+	admins, _ := dao.GetAdmins(userName, pageOffset, pageSize)
 	if admins == nil || len(admins) <= 0 {
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
@@ -211,6 +211,17 @@ func GetRole(roleID int) (*entity.Roles, *message.Message) {
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
 	return role, &err
+}
+
+func GetRoles(page, pageSize int) ([]*entity.Roles, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	pageOffset := app.GetPageOffset(page, pageSize)
+	roles, _ := dao.GetRoles(pageOffset, pageSize)
+	if roles == nil || len(roles) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return roles, &err
 }
 
 func GetModule(router string) (*entity.Modules, *message.Message) {

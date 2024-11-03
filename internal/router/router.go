@@ -28,7 +28,7 @@ func NewRouter() *gin.Engine {
 	rja.POST("/home/logout", api.LogoutHandler)
 	rja.POST("/home/changepassword", api.ChangePasswordHandler)
 
-	rja.GET("/admin/list", api.AdminListHandler)
+	rja.GET("/admin/list", api.AdminsHandler)
 
 	return r
 }

@@ -9,7 +9,7 @@
     "pwd.salt": "snai",
     "jwt.secret": "snai_2nL64",
     "jwt.issuer": "snai_cms",
-    "jwt.expire": 7200,
+    "jwt.expire": 10800,
     "login.lockminute":30,
     "login.errorcount":3,
     "defaultpagesize":10,
