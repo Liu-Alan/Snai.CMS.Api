@@ -46,6 +46,30 @@ func GetAdmins(userName string, page, pageSize int) ([]*entity.Admins, *message.
 	return admins, &err
 }
 
+func AddAdmin(admin *entity.Admins) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if admin != nil && strings.TrimSpace(admin.UserName) == "" {
+		_, errA := GetAdmin(admin.UserName)
+		if errA.Code == message.Success {
+			err.Code = message.InvalidParams
+			err.Msg = "当前用户名已存在"
+			return &err
+		}
+		if errm := dao.AddAdmin(admin); errm != nil {
+			err.Code = message.InvalidParams
+			err.Msg = "保存Admin失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "保存Admin失败"
+		return &err
+	}
+}
+
 func ModifyAdmin(admin *entity.Admins) *message.Message {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 

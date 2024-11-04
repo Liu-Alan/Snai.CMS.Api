@@ -1,10 +1,14 @@
 package api
 
 import (
+	"strings"
 	"time"
 
 	"Snai.CMS.Api/common/app"
+	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/common/message"
+	"Snai.CMS.Api/common/utils"
+	"Snai.CMS.Api/internal/entity"
 	"Snai.CMS.Api/internal/model"
 	"Snai.CMS.Api/internal/service"
 	"github.com/gin-gonic/gin"
@@ -60,4 +64,34 @@ func AdminsHandler(c *gin.Context) {
 			response.ResponsePage(&page)
 		}
 	}
+}
+
+func AddAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	var adminIn model.AddAdminIn
+
+	msg := app.BindAndValid(c, &adminIn, "form")
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+		return
+	}
+
+	adminIn.Password = strings.ToLower(utils.EncodeMD5(config.AppConf.PwdSalt + strings.TrimSpace(adminIn.Password)))
+	admin := entity.Admins{
+		UserName:   adminIn.UserName,
+		Password:   adminIn.Password,
+		RoleID:     adminIn.RoleID,
+		State:      adminIn.State,
+		CreateTime: int(time.Now().Unix()),
+	}
+	msgM := service.AddAdmin(&admin)
+	if msgM.Code == message.Success {
+		msg.Code = message.Success
+		msg.Msg = "添加成功"
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msgM)
+	}
+
 }

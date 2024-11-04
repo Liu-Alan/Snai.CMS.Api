@@ -46,6 +46,13 @@ func GetAdmins(userName string, pageOffset, pageSize int) ([]*entity.Admins, err
 	return admins, nil
 }
 
+func AddAdmin(admin *entity.Admins) error {
+	if err := _cmsdb.Create(&admin).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func ModifyAdmin(admin *entity.Admins) error {
 	if err := _cmsdb.Save(&admin).Error; err != nil {
 		return err
@@ -67,7 +74,6 @@ func AddToken(token *entity.Tokens) error {
 	if err := _cmsdb.Create(&token).Error; err != nil {
 		return err
 	}
-
 	return nil
 }
 
