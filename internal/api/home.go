@@ -92,7 +92,7 @@ func ChangePasswordHandler(c *gin.Context) {
 	} else {
 		pwd := strings.ToLower(utils.EncodeMD5(config.AppConf.PwdSalt + strings.TrimSpace(passwordIn.OldPassword)))
 		if admin.Password != pwd {
-			msg.Code = message.Error
+			msg.Code = message.InvalidParams
 			msg.Msg = "原密码错误"
 			response.ToErrorResponse(msg)
 			return

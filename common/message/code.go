@@ -5,9 +5,9 @@ const (
 	Fail    = 100
 	Error   = 500
 
-	InvalidParams    = 501
-	BindParamsError  = 502
-	ValidParamsError = 503
+	InvalidParams    = 406
+	BindParamsError  = 407
+	ValidParamsError = 408
 
 	PermissionFailed = 403
 
