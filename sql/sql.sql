@@ -64,16 +64,17 @@ ALTER TABLE modules ADD UNIQUE INDEX ix_modules_parent_id_title(parent_id,title)
 ALTER TABLE modules ADD INDEX ix_modules_router(router)  			
 ;
 
-INSERT into modules(id,parent_id,title,router,sort,state)
-select 1,-1,'修改密码','/api/home/changepassword',1,1
-UNION ALL select 2,-1,'退出','/api/home/logout',1,1
-UNION ALL select 3,0,'管理员管理','',10,1
-UNION ALL select 4,4,'账号管理','/api/admin/list',11,1
+INSERT into modules(id,parent_id,title,router,sort,state,menu,ui_router,name)
+select 1,-1,'修改密码','/api/home/changepassword',1,1,2,'',''
+UNION ALL select 2,-1,'退出','/api/home/logout',1,1,2,'',''
+UNION ALL select 3,0,'系统管理','',100,1,1,'','manage'
+UNION ALL select 4,4,'账号管理','/api/admin/list',110,1,1,'/admins','admins'
+UNION ALL select 5,4,'添加账号','/api/admin/add',1,1,2,'','addadmin'
+UNION ALL select 6,4,'修改账号','/api/admin/update',1,1,2,'','updateadmin'
+UNION ALL select 7,4,'删除账号','/api/admin/delete',1,1,2,'','deleteadmin'
+UNION ALL select 8,4,'禁启用账号','/api/admin/endisable',1,1,2,'','endisableadmin'
+UNION ALL select 9,4,'解锁账号','/api/admin/unlock',1,1,2,'','unlockadmin'
 /*
-UNION ALL select 5,5,'添加修改账号','ModifyAdmin',11,1
-UNION ALL select 6,5,'禁启用账号','UpdateAdminState',11,1
-UNION ALL select 7,5,'解锁账号','UnlockAdmin',11,1
-UNION ALL select 8,5,'删除账号','DeleteAdmin',11,1
 UNION ALL select 9,4,'菜单管理','ModuleList',12,1
 UNION ALL select 10,10,'添加修改菜单','ModifyModule',12,1
 UNION ALL select 11,10,'禁启用菜单','UpdateModuleState',12,1
@@ -113,12 +114,12 @@ ALTER TABLE role_module ADD UNIQUE INDEX ix_role_module_role_id_module_id(role_i
 INSERT into role_module(role_id,module_id)
 select 1,3
 UNION ALL select 1,4
-/*
 UNION ALL select 1,5
 UNION ALL select 1,6
 UNION ALL select 1,7
 UNION ALL select 1,8
 UNION ALL select 1,9
+/*
 UNION ALL select 1,10
 UNION ALL select 1,11
 UNION ALL select 1,12

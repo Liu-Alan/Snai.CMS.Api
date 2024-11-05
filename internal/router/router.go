@@ -23,6 +23,7 @@ func NewRouter() *gin.Engine {
 	rj := r.Group("/api").Use(middleware.Jwt())
 	rj.StaticFS("/static", http.Dir(config.AppConf.FileHost+"/file"))
 	rj.GET("/home/menu", api.MenuHandler)
+	rj.GET("/home/role", api.RoleHandler)
 
 	rja := r.Group("/api").Use(middleware.Jwt(), middleware.Auth())
 	rja.POST("/home/logout", api.LogoutHandler)

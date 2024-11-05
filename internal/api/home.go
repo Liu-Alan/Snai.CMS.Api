@@ -153,3 +153,27 @@ func MenuHandler(c *gin.Context) {
 		}
 	}
 }
+
+func RoleHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+
+	roles, msg := service.GetRoles(0, 0)
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+	} else {
+
+		var rolesOut []*model.RoleOut
+		for _, role := range roles {
+			if role.State == 1 {
+				roleOut := model.RoleOut{
+					ID:    role.ID,
+					Title: role.Title,
+				}
+				rolesOut = append(rolesOut, &roleOut)
+			}
+		}
+		msg.Result = rolesOut
+		response.ToResponse(msg)
+	}
+
+}

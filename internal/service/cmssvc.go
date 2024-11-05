@@ -49,7 +49,7 @@ func GetAdmins(userName string, page, pageSize int) ([]*entity.Admins, *message.
 func AddAdmin(admin *entity.Admins) *message.Message {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
-	if admin != nil && strings.TrimSpace(admin.UserName) == "" {
+	if admin != nil && strings.TrimSpace(admin.UserName) != "" {
 		_, errA := GetAdmin(admin.UserName)
 		if errA.Code == message.Success {
 			err.Code = message.InvalidParams
