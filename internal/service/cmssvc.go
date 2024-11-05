@@ -27,6 +27,19 @@ func GetAdmin(userName string) (*entity.Admins, *message.Message) {
 	return admin, &err
 }
 
+func GetAdminByID(id int) (*entity.Admins, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if id <= 0 {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	admin, _ := dao.GetAdminByID(id)
+	if admin == nil || admin.ID <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return admin, &err
+}
+
 func GetAdminCount(userName string) int64 {
 	count, _ := dao.GetAdminCount(userName)
 	return count

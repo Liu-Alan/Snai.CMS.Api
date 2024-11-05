@@ -15,6 +15,16 @@ func GetAdmin(userName string) (*entity.Admins, error) {
 	return &admin, nil
 }
 
+func GetAdminByID(id int) (*entity.Admins, error) {
+	tx := _cmsdb.Where("id = ? ", id)
+	var admin entity.Admins
+	err := tx.First(&admin).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &admin, nil
+}
+
 func GetAdminCount(userName string) (int64, error) {
 	tx := _cmsdb
 	if userName != "" {

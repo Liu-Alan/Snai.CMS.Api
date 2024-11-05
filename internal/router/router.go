@@ -30,7 +30,9 @@ func NewRouter() *gin.Engine {
 	rja.POST("/home/changepassword", api.ChangePasswordHandler)
 
 	rja.GET("/admin/list", api.AdminsHandler)
+	rja.GET("/admin/get", api.GetAdminHandler)
 	rja.POST("/admin/add", api.AddAdminHandler)
+	rja.POST("/admin/update", api.UpdateAdminHandler)
 
 	return r
 }

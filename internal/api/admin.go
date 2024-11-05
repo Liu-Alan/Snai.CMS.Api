@@ -1,6 +1,7 @@
 package api
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
@@ -66,6 +67,29 @@ func AdminsHandler(c *gin.Context) {
 	}
 }
 
+func GetAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil || id <= 0 {
+		response.ToErrorResponse(&message.Message{Code: message.BindParamsError, Msg: message.GetMsg(message.BindParamsError)})
+		return
+	}
+
+	admin, msg := service.GetAdminByID(id)
+	if msg.Code == message.Success {
+		adminOut := model.AdminsOut{
+			ID:       admin.ID,
+			UserName: admin.UserName,
+			RoleID:   admin.RoleID,
+			State:    admin.State,
+		}
+		msg.Result = adminOut
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
 func AddAdminHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 	var adminIn model.AddAdminIn
@@ -93,5 +117,38 @@ func AddAdminHandler(c *gin.Context) {
 	} else {
 		response.ToErrorResponse(msgM)
 	}
+}
 
+func UpdateAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	var adminIn model.UpdateAdminIn
+
+	msg := app.BindAndValid(c, &adminIn, "form")
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+		return
+	}
+
+	admin, msg := service.GetAdminByID(adminIn.ID)
+	if msg.Code == message.Success {
+		if adminIn.Password != "******" && strings.TrimSpace(adminIn.Password) != "" {
+			admin.Password = strings.ToLower(utils.EncodeMD5(config.AppConf.PwdSalt + strings.TrimSpace(adminIn.Password)))
+		}
+		admin.UserName = adminIn.UserName
+		admin.RoleID = adminIn.RoleID
+		admin.State = adminIn.State
+		admin.UpdateTime = int(time.Now().Unix())
+
+		msg := service.ModifyAdmin(admin)
+		if msg.Code == message.Success {
+			msg.Code = message.Success
+			msg.Msg = "修改成功"
+			msg.Result = nil
+			response.ToResponse(msg)
+		} else {
+			response.ToErrorResponse(msg)
+		}
+	} else {
+		response.ToErrorResponse(msg)
+	}
 }

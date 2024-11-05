@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"strings"
+
 	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/message"
 	"Snai.CMS.Api/internal/service"
@@ -12,6 +14,7 @@ func Auth() gin.HandlerFunc {
 		username := c.MustGet("user_name").(string)
 		token := c.MustGet("token").(string)
 		router := c.Request.URL.Path
+		router = replaceRoute(router)
 
 		err := service.VerifyUserRole(username, router)
 		if err.Code != message.Success {
@@ -25,4 +28,11 @@ func Auth() gin.HandlerFunc {
 		c.Set("token", token)
 		c.Next()
 	}
+}
+
+func replaceRoute(route string) string {
+	if strings.Contains(route, "/admin/get") {
+		route = strings.Replace(route, "/admin/get", "/admin/list", 1)
+	}
+	return route
 }
