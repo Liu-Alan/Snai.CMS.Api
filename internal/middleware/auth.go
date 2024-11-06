@@ -31,8 +31,15 @@ func Auth() gin.HandlerFunc {
 }
 
 func replaceRoute(route string) string {
+	var newRoute string
 	if strings.Contains(route, "/admin/get") {
-		route = strings.Replace(route, "/admin/get", "/admin/list", 1)
+		newRoute = strings.Replace(route, "/admin/get", "/admin/list", 1)
+	} else if strings.Contains(route, "/admin/batchdelete") {
+		newRoute = strings.Replace(route, "/admin/batchdelete", "/admin/delete", 1)
+	} else if strings.Contains(route, "/admin/batchendisable") {
+		newRoute = strings.Replace(route, "/admin/batchendisable", "/admin/endisable", 1)
+	} else {
+		newRoute = route
 	}
-	return route
+	return newRoute
 }

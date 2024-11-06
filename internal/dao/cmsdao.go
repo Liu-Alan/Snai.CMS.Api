@@ -70,6 +70,37 @@ func ModifyAdmin(admin *entity.Admins) error {
 	return nil
 }
 
+func UpdateAdminState(ids []int, state int8, updateTime int) error {
+	result := _cmsdb.Model(&entity.Admins{}).Where("id IN ?", ids).Updates(entity.Admins{State: state, UpdateTime: updateTime})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func UnlockAdmin(id int) error {
+	result := _cmsdb.Model(&entity.Admins{}).Where("id = ?", id).Update("lock_time", 0)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func DeleteAdmin(admin *entity.Admins) error {
+	if err := _cmsdb.Delete(&admin).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func BatchDeleteAdmin(ids []int) error {
+	var admin entity.Admins
+	if err := _cmsdb.Delete(&admin, ids).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetToken(token string) (*entity.Tokens, error) {
 	tx := _cmsdb.Where("token = ? ", token)
 	var tk entity.Tokens

@@ -152,3 +152,113 @@ func UpdateAdminHandler(c *gin.Context) {
 		response.ToErrorResponse(msg)
 	}
 }
+
+func EnDisableAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	var adminIn model.EnDisableAdminIn
+
+	msg := app.BindAndValid(c, &adminIn, "form")
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+		return
+	}
+	ids := []int{adminIn.ID}
+	msgM := service.UpdateAdminState(ids, adminIn.State)
+	if msgM.Code == message.Success {
+		msgC := "启用成功"
+		if adminIn.State == 2 {
+			msgC = "禁用成功"
+		}
+		msg.Code = message.Success
+		msg.Msg = msgC
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
+func BatchEnDisableAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	var adminIn model.BatchEnDisableAdminIn
+
+	msg := app.BindAndValid(c, &adminIn, "form")
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+		return
+	}
+	msgM := service.UpdateAdminState(adminIn.IDs, adminIn.State)
+	if msgM.Code == message.Success {
+		msgC := "启用成功"
+		if adminIn.State == 2 {
+			msgC = "禁用成功"
+		}
+		msg.Code = message.Success
+		msg.Msg = msgC
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
+func UnlockAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	id, err := strconv.Atoi(c.Query("id"))
+
+	if err != nil || id <= 0 {
+		response.ToErrorResponse(&message.Message{Code: message.BindParamsError, Msg: message.GetMsg(message.BindParamsError)})
+		return
+	}
+
+	msg := service.UnlockAdmin(id)
+	if msg.Code == message.Success {
+		msg.Code = message.Success
+		msg.Msg = "解锁成功"
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
+func DeleteAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	id, err := strconv.Atoi(c.Query("id"))
+
+	if err != nil || id <= 0 {
+		response.ToErrorResponse(&message.Message{Code: message.BindParamsError, Msg: message.GetMsg(message.BindParamsError)})
+		return
+	}
+
+	msg := service.DeleteAdmin(id)
+	if msg.Code == message.Success {
+		msg.Code = message.Success
+		msg.Msg = "删除成功"
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
+func BatchDeleteAdminHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	var adminIn model.BatchDeleteAdminIn
+
+	msg := app.BindAndValid(c, &adminIn, "form")
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+		return
+	}
+
+	msgM := service.BatchDeleteAdmin(adminIn.IDs)
+	if msgM.Code == message.Success {
+		msg.Code = message.Success
+		msg.Msg = "删除成功"
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}

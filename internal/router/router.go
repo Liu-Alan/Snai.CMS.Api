@@ -33,6 +33,11 @@ func NewRouter() *gin.Engine {
 	rja.GET("/admin/get", api.GetAdminHandler)
 	rja.POST("/admin/add", api.AddAdminHandler)
 	rja.POST("/admin/update", api.UpdateAdminHandler)
+	rja.POST("/admin/endisable", api.EnDisableAdminHandler)
+	rja.POST("/admin/batchendisable", api.BatchEnDisableAdminHandler)
+	rja.GET("/admin/unlock", api.UnlockAdminHandler)
+	rja.GET("/admin/delete", api.DeleteAdminHandler)
+	rja.POST("/admin/batchdelete", api.BatchDeleteAdminHandler)
 
 	return r
 }

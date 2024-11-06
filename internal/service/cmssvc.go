@@ -7,6 +7,7 @@ import (
 
 	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/config"
+	"Snai.CMS.Api/common/logging"
 	"Snai.CMS.Api/common/message"
 	"Snai.CMS.Api/common/utils"
 	"Snai.CMS.Api/internal/dao"
@@ -70,6 +71,7 @@ func AddAdmin(admin *entity.Admins) *message.Message {
 			return &err
 		}
 		if errm := dao.AddAdmin(admin); errm != nil {
+			logging.Error(errm.Error())
 			err.Code = message.InvalidParams
 			err.Msg = "保存Admin失败"
 			return &err
@@ -94,6 +96,7 @@ func ModifyAdmin(admin *entity.Admins) *message.Message {
 			return &err
 		} else {
 			if errm := dao.ModifyAdmin(admin); errm != nil {
+				logging.Error(errm.Error())
 				err.Code = message.InvalidParams
 				err.Msg = "用户信息修改失败"
 				return &err
@@ -104,6 +107,86 @@ func ModifyAdmin(admin *entity.Admins) *message.Message {
 	} else {
 		err.Code = message.InvalidParams
 		err.Msg = "用户不存在"
+		return &err
+	}
+}
+
+func UpdateAdminState(ids []int, state int8) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+	updateTime := int(time.Now().Unix())
+	if len(ids) > 0 {
+		if errm := dao.UpdateAdminState(ids, state, updateTime); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "用户更新失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "没有选择任何列"
+		return &err
+	}
+}
+
+func UnlockAdmin(id int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if id > 0 {
+		if errm := dao.UnlockAdmin(id); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "用户解锁失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "用户不存在"
+		return &err
+	}
+}
+
+func DeleteAdmin(id int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if id > 0 {
+		admin := entity.Admins{
+			ID: id,
+		}
+
+		if errm := dao.DeleteAdmin(&admin); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "用户删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "用户不存在"
+		return &err
+	}
+}
+
+func BatchDeleteAdmin(ids []int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if len(ids) > 0 {
+		if errm := dao.BatchDeleteAdmin(ids); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "用户删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "没有选择任何列"
 		return &err
 	}
 }
