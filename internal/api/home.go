@@ -127,7 +127,7 @@ func MenuHandler(c *gin.Context) {
 			for _, v := range roleModules {
 				ids = append(ids, v.ModuleID)
 			}
-			modules, msg := service.GetModules(ids)
+			modules, msg := service.GetModulesByIDs(ids)
 			if msg.Code != message.Success {
 				response.ToErrorResponse(msg)
 			} else {

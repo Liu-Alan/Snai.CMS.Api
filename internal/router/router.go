@@ -39,5 +39,14 @@ func NewRouter() *gin.Engine {
 	rja.GET("/admin/delete", api.DeleteAdminHandler)
 	rja.POST("/admin/batchdelete", api.BatchDeleteAdminHandler)
 
+	rja.GET("/module/list", api.ModulesHandler)
+	rja.GET("/module/get", api.GetModuleHandler)
+	rja.POST("/module/add", api.AddModuleHandler)
+	rja.POST("/module/update", api.UpdateModuleHandler)
+	rja.POST("/module/endisable", api.EnDisableModuleHandler)
+	rja.POST("/module/batchendisable", api.BatchEnDisableModuleHandler)
+	rja.GET("/module/delete", api.DeleteModuleHandler)
+	rja.POST("/module/batchdelete", api.BatchDeleteModuleHandler)
+
 	return r
 }

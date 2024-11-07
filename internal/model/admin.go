@@ -31,10 +31,6 @@ type UpdateAdminIn struct {
 	State     int8   `form:"state" validate:"oneof=1 2" label:"状态"`
 }
 
-type BatchDeleteAdminIn struct {
-	IDs []int `form:"ids[]" validate:"min=1,dive,gte=1" label:"ids"`
-}
-
 type EnDisableAdminIn struct {
 	ID    int  `form:"id" validate:"gte=1" label:"ID"`
 	State int8 `form:"state" validate:"oneof=1 2" label:"状态"`
@@ -43,4 +39,8 @@ type EnDisableAdminIn struct {
 type BatchEnDisableAdminIn struct {
 	IDs   []int `form:"ids[]" validate:"min=1,dive,gte=1" label:"ids"`
 	State int8  `form:"state" validate:"oneof=1 2" label:"状态"`
+}
+
+type BatchDeleteAdminIn struct {
+	IDs []int `form:"ids[]" validate:"min=1,dive,gte=1" label:"ids"`
 }

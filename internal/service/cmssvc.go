@@ -320,6 +320,196 @@ func ModifyToken(token *entity.Tokens) *message.Message {
 	}
 }
 
+func GetModule(router string) (*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if strings.TrimSpace(router) == "" {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	module, _ := dao.GetModule(router)
+	if module == nil || module.ID <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return module, &err
+}
+
+func GetModuleByID(id int) (*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if id <= 0 {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	module, _ := dao.GetModuleByID(id)
+	if module == nil || module.ID <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return module, &err
+}
+
+func GetModuleByTitle(parentID int, title string) (*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if parentID < 0 || strings.TrimSpace(title) == "" {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	module, _ := dao.GetModuleByTitle(parentID, title)
+	if module == nil || module.ID <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return module, &err
+}
+
+func GetModulesByIDs(ids []int) ([]*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if ids == nil || len(ids) <= 0 {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	modules, _ := dao.GetModulesByIDs(ids)
+	if modules == nil || len(modules) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return modules, &err
+}
+
+func GetModules(page, pageSize int) ([]*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	pageOffset := app.GetPageOffset(page, pageSize)
+	modules, _ := dao.GetModules(pageOffset, pageSize)
+	if modules == nil || len(modules) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return modules, &err
+}
+
+func GetModuleMenus() ([]*entity.Modules, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	modules, _ := dao.GetModuleMenus()
+	if modules == nil || len(modules) <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return modules, &err
+}
+
+func GetModuleCount() int64 {
+	count, _ := dao.GetModuleCount()
+	return count
+}
+
+func AddModule(module *entity.Modules) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if module != nil && strings.TrimSpace(module.Title) != "" {
+		_, errA := GetModuleByTitle(module.ParentID, module.Title)
+		if errA.Code == message.Success {
+			err.Code = message.InvalidParams
+			err.Msg = "当前模块名已存在"
+			return &err
+		}
+		if errm := dao.AddModule(module); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "保存Module失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "保存Module失败"
+		return &err
+	}
+}
+
+func ModifyModule(module *entity.Modules) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if module != nil && module.ID > 0 {
+		reModule, _ := GetModuleByTitle(module.ParentID, module.Title)
+		if reModule != nil && module.ID != reModule.ID {
+			err.Code = message.InvalidParams
+			err.Msg = "模块名重复"
+			return &err
+		} else {
+			if errm := dao.ModifyModule(module); errm != nil {
+				logging.Error(errm.Error())
+				err.Code = message.InvalidParams
+				err.Msg = "模块修改失败"
+				return &err
+			}
+
+			return &err
+		}
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "模块不存在"
+		return &err
+	}
+}
+
+func UpdateModuleState(ids []int, state int8) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if len(ids) > 0 {
+		if errm := dao.UpdateModuleState(ids, state); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "模块更新失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "没有选择任何列"
+		return &err
+	}
+}
+
+func DeleteModule(id int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if id > 0 {
+		module := entity.Modules{
+			ID: id,
+		}
+
+		if errm := dao.DeleteModule(&module); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "模块删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "模块不存在"
+		return &err
+	}
+}
+
+func BatchDeleteModule(ids []int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if len(ids) > 0 {
+		if errm := dao.BatchDeleteModule(ids); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "模块删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "没有选择任何列"
+		return &err
+	}
+}
+
 func GetRole(roleID int) (*entity.Roles, *message.Message) {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
@@ -342,32 +532,6 @@ func GetRoles(page, pageSize int) ([]*entity.Roles, *message.Message) {
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
 	return roles, &err
-}
-
-func GetModule(router string) (*entity.Modules, *message.Message) {
-	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
-
-	if strings.TrimSpace(router) == "" {
-		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
-	}
-	module, _ := dao.GetModule(router)
-	if module == nil || module.ID <= 0 {
-		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
-	}
-	return module, &err
-}
-
-func GetModules(ids []int) ([]*entity.Modules, *message.Message) {
-	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
-
-	if ids == nil || len(ids) <= 0 {
-		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
-	}
-	modules, _ := dao.GetModules(ids)
-	if modules == nil || len(modules) <= 0 {
-		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
-	}
-	return modules, &err
 }
 
 func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, *message.Message) {

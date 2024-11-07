@@ -68,23 +68,24 @@ INSERT into modules(id,parent_id,title,router,sort,state,menu,ui_router,name)
 select 1,-1,'修改密码','/api/home/changepassword',1,1,2,'',''
 UNION ALL select 2,-1,'退出','/api/home/logout',1,1,2,'',''
 UNION ALL select 3,0,'系统管理','',100,1,1,'','manage'
-UNION ALL select 4,4,'账号管理','/api/admin/list',110,1,1,'/admins','admins'
+UNION ALL select 4,3,'账号管理','/api/admin/list',110,1,1,'/admins','admins'
 UNION ALL select 5,4,'添加账号','/api/admin/add',1,1,2,'','addadmin'
 UNION ALL select 6,4,'修改账号','/api/admin/update',1,1,2,'','updateadmin'
 UNION ALL select 7,4,'删除账号','/api/admin/delete',1,1,2,'','deleteadmin'
 UNION ALL select 8,4,'禁启用账号','/api/admin/endisable',1,1,2,'','endisableadmin'
 UNION ALL select 9,4,'解锁账号','/api/admin/unlock',1,1,2,'','unlockadmin'
-/*
-UNION ALL select 9,4,'菜单管理','ModuleList',12,1
-UNION ALL select 10,10,'添加修改菜单','ModifyModule',12,1
-UNION ALL select 11,10,'禁启用菜单','UpdateModuleState',12,1
-UNION ALL select 12,10,'删除菜单','DeleteModule',12,1
-UNION ALL select 13,4,'角色管理','RoleList',13,1
-UNION ALL select 14,14,'添加修改角色','ModifyRole',13,1
-UNION ALL select 15,14,'禁启用角色','UpdateRoleState',13,1
-UNION ALL select 16,14,'删除角色','DeleteRole',13,1
-UNION ALL select 17,14,'分配权限','ModifyRoleRight',13,1
-*/
+UNION ALL select 10,3,'模块管理','/api/module/list',120,1,1,'/modules','modules'
+UNION ALL select 11,10,'添加模块','/api/module/add',1,1,2,'','addmodule'
+UNION ALL select 12,10,'修改模块','/api/module/update',1,1,2,'','updatemodule'
+UNION ALL select 13,10,'删除模块','/api/module/delete',1,1,2,'','deletemodule'
+UNION ALL select 14,10,'禁启用模块','/api/module/endisable',1,1,2,'','endisablemodule'
+UNION ALL select 15,3,'角色管理','/api/role/list',130,1,1,'/roles','roles'
+UNION ALL select 16,15,'添加角色','/api/role/add',1,1,2,'','addrole'
+UNION ALL select 17,15,'修改角色','/api/role/update',1,1,2,'','updaterole'
+UNION ALL select 18,15,'删除角色','/api/role/delete',1,1,2,'','deleterole'
+UNION ALL select 19,15,'禁启用角色','/api/role/endisable',1,1,2,'','endisablerole'
+UNION ALL select 20,15,'分配权限','/api/role/assignperm',1,1,2,'','assignperm'
+
 ;
 
 CREATE TABLE roles(
@@ -119,7 +120,6 @@ UNION ALL select 1,6
 UNION ALL select 1,7
 UNION ALL select 1,8
 UNION ALL select 1,9
-/*
 UNION ALL select 1,10
 UNION ALL select 1,11
 UNION ALL select 1,12
@@ -128,5 +128,7 @@ UNION ALL select 1,14
 UNION ALL select 1,15
 UNION ALL select 1,16
 UNION ALL select 1,17
-*/
+UNION ALL select 1,18
+UNION ALL select 1,19
+UNION ALL select 1,20
 ;

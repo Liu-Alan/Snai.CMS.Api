@@ -125,6 +125,117 @@ func ModifyToken(token *entity.Tokens) error {
 	return nil
 }
 
+func GetModule(router string) (*entity.Modules, error) {
+	tx := _cmsdb.Where("router = ? ", router)
+	var module entity.Modules
+	err := tx.First(&module).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &module, nil
+}
+
+func GetModuleByID(id int) (*entity.Modules, error) {
+	tx := _cmsdb.Where("id = ? ", id)
+	var module entity.Modules
+	err := tx.First(&module).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &module, nil
+}
+
+func GetModuleByTitle(parentID int, title string) (*entity.Modules, error) {
+	tx := _cmsdb.Where("parent_id = ? And title = ?", parentID, title)
+	var module entity.Modules
+	err := tx.First(&module).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &module, nil
+}
+
+func GetModulesByIDs(ids []int) ([]*entity.Modules, error) {
+	tx := _cmsdb.Where("id in ? ", ids)
+	var modules []*entity.Modules
+	err := tx.Order("sort, id").Find(&modules).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return modules, nil
+}
+
+func GetModules(pageOffset, pageSize int) ([]*entity.Modules, error) {
+	tx := _cmsdb
+	if pageOffset >= 0 && pageSize > 0 {
+		tx = tx.Offset(pageOffset).Limit(pageSize)
+	}
+	var modules []*entity.Modules
+	err := tx.Find(&modules).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return modules, nil
+}
+
+func GetModuleMenus() ([]*entity.Modules, error) {
+	tx := _cmsdb.Where("menu = 1")
+	var modules []*entity.Modules
+	err := tx.Find(&modules).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return modules, nil
+}
+
+func GetModuleCount() (int64, error) {
+	tx := _cmsdb
+	var count int64
+	var admin entity.Modules
+	err := tx.Model(&admin).Count(&count).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return 0, err
+	}
+	return count, nil
+}
+
+func AddModule(module *entity.Modules) error {
+	if err := _cmsdb.Create(&module).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func ModifyModule(module *entity.Modules) error {
+	if err := _cmsdb.Save(&module).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateModuleState(ids []int, state int8) error {
+	result := _cmsdb.Model(&entity.Modules{}).Where("id IN ?", ids).Update("state", state)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func DeleteModule(module *entity.Modules) error {
+	if err := _cmsdb.Delete(&module).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func BatchDeleteModule(ids []int) error {
+	var module entity.Modules
+	if err := _cmsdb.Delete(&module, ids).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func GetRole(roleID int) (*entity.Roles, error) {
 	tx := _cmsdb.Where("id = ? ", roleID)
 	var role entity.Roles
@@ -146,26 +257,6 @@ func GetRoles(pageOffset, pageSize int) ([]*entity.Roles, error) {
 		return nil, err
 	}
 	return roles, nil
-}
-
-func GetModule(router string) (*entity.Modules, error) {
-	tx := _cmsdb.Where("router = ? ", router)
-	var module entity.Modules
-	err := tx.First(&module).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
-	}
-	return &module, nil
-}
-
-func GetModules(ids []int) ([]*entity.Modules, error) {
-	tx := _cmsdb.Where("id in ? ", ids)
-	var modules []*entity.Modules
-	err := tx.Order("sort, id").Find(&modules).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return nil, err
-	}
-	return modules, nil
 }
 
 func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, error) {
