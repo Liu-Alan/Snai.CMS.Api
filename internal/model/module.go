@@ -1,6 +1,6 @@
 package model
 
-type ModulesOut struct {
+type ModuleOut struct {
 	Key         int    `json:"key"`
 	ID          int    `json:"id"`
 	ParentID    int    `json:"parent_id"`

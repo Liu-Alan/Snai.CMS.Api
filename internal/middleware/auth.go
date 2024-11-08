@@ -44,6 +44,12 @@ func replaceRoute(route string) string {
 		newRoute = strings.Replace(route, "/module/batchendisable", "/module/endisable", 1)
 	} else if strings.Contains(route, "/module/batchdelete") {
 		newRoute = strings.Replace(route, "/module/batchdelete", "/module/delete", 1)
+	} else if strings.Contains(route, "/role/get") {
+		newRoute = strings.Replace(route, "/role/get", "/role/list", 1)
+	} else if strings.Contains(route, "/role/batchendisable") {
+		newRoute = strings.Replace(route, "/role/batchendisable", "/role/endisable", 1)
+	} else if strings.Contains(route, "/role/batchdelete") {
+		newRoute = strings.Replace(route, "/role/batchdelete", "/role/delete", 1)
 	} else {
 		newRoute = route
 	}

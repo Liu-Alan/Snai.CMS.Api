@@ -26,8 +26,3 @@ type MenuOut struct {
 	Menu     int8   `json:"menu"`
 	Sort     int    `json:"sort"`
 }
-
-type RoleOut struct {
-	ID    int    `json:"id"`
-	Title string `json:"title"`
-}

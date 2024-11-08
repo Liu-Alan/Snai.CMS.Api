@@ -17,7 +17,7 @@ import (
 
 func AdminsHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	var adminsIn model.AdminsIn
+	var adminsIn model.AdminIn
 
 	msg := app.BindAndValid(c, &adminsIn, "form")
 	if msg.Code != message.Success {
@@ -38,11 +38,11 @@ func AdminsHandler(c *gin.Context) {
 			page := app.ResponsePage{Page: pager.Page, PageSize: pager.PageSize, Total: 0}
 			response.ResponsePage(&page)
 		} else {
-			var adminsOut []*model.AdminsOut
+			var adminsOut []*model.AdminOut
 			roles, _ := service.GetRoles(0, 0)
 			nowtime := int(time.Now().Unix())
 			for _, admin := range admins {
-				adminOut := model.AdminsOut{
+				adminOut := model.AdminOut{
 					Key:      admin.ID,
 					ID:       admin.ID,
 					UserName: admin.UserName,
@@ -77,7 +77,7 @@ func GetAdminHandler(c *gin.Context) {
 
 	admin, msg := service.GetAdminByID(id)
 	if msg.Code == message.Success {
-		adminOut := model.AdminsOut{
+		adminOut := model.AdminOut{
 			ID:       admin.ID,
 			UserName: admin.UserName,
 			RoleID:   admin.RoleID,

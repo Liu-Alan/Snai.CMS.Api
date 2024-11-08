@@ -236,8 +236,18 @@ func BatchDeleteModule(ids []int) error {
 	return nil
 }
 
-func GetRole(roleID int) (*entity.Roles, error) {
+func GetRoleByID(roleID int) (*entity.Roles, error) {
 	tx := _cmsdb.Where("id = ? ", roleID)
+	var role entity.Roles
+	err := tx.First(&role).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &role, nil
+}
+
+func GetRoleByTitle(title string) (*entity.Roles, error) {
+	tx := _cmsdb.Where("title = ?", title)
 	var role entity.Roles
 	err := tx.First(&role).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -257,6 +267,54 @@ func GetRoles(pageOffset, pageSize int) ([]*entity.Roles, error) {
 		return nil, err
 	}
 	return roles, nil
+}
+
+func GetRoleCount() (int64, error) {
+	tx := _cmsdb
+	var count int64
+	var role entity.Roles
+	err := tx.Model(&role).Count(&count).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return 0, err
+	}
+	return count, nil
+}
+
+func AddRole(role *entity.Roles) error {
+	if err := _cmsdb.Create(&role).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func ModifyRole(role *entity.Roles) error {
+	if err := _cmsdb.Save(&role).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func UpdateRoleState(ids []int, state int8) error {
+	result := _cmsdb.Model(&entity.Roles{}).Where("id IN ?", ids).Update("state", state)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func DeleteRole(role *entity.Roles) error {
+	if err := _cmsdb.Delete(&role).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func BatchDeleteRole(ids []int) error {
+	var role entity.Roles
+	if err := _cmsdb.Delete(&role, ids).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, error) {

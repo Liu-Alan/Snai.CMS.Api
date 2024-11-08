@@ -31,16 +31,6 @@ func (Tokens) TableName() string {
 	return "tokens"
 }
 
-type Roles struct {
-	ID    int    `gorm:"column:id"`
-	Title string `gorm:"column:title"`
-	State int8   `gorm:"column:state"`
-}
-
-func (Roles) TableName() string {
-	return "roles"
-}
-
 type Modules struct {
 	ID       int    `gorm:"column:id"`
 	ParentID int    `gorm:"column:parent_id"`
@@ -55,6 +45,16 @@ type Modules struct {
 
 func (Modules) TableName() string {
 	return "modules"
+}
+
+type Roles struct {
+	ID    int    `gorm:"column:id"`
+	Title string `gorm:"column:title"`
+	State int8   `gorm:"column:state"`
+}
+
+func (Roles) TableName() string {
+	return "roles"
 }
 
 type RoleModule struct {

@@ -11,54 +11,40 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ModulesHandler(c *gin.Context) {
+func RolesHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	pager := app.ResponsePage{Page: app.GetPage(c), PageSize: app.GetPageSize(c)}
 
-	totalRows := service.GetModuleCount()
+	totalRows := service.GetRoleCount()
 
 	if totalRows <= 0 {
 		page := app.ResponsePage{Page: pager.Page, PageSize: pager.PageSize, Total: totalRows}
 		response.ResponsePage(&page)
 	} else {
-		modules, msg := service.GetModules(pager.Page, pager.PageSize)
+		roles, msg := service.GetRoles(pager.Page, pager.PageSize)
 		if msg.Code != message.Success {
 			page := app.ResponsePage{Page: pager.Page, PageSize: pager.PageSize, Total: 0}
 			response.ResponsePage(&page)
 		} else {
-			var modulesOut []*model.ModuleOut
-			menus, _ := service.GetModuleMenus()
-			for _, module := range modules {
-				moduleOut := model.ModuleOut{
-					Key:      module.ID,
-					ID:       module.ID,
-					ParentID: module.ParentID,
-					Title:    module.Title,
-					Name:     module.Name,
-					UIRouter: module.UIRouter,
-					Router:   module.Router,
-					Menu:     module.Menu,
-					Sort:     module.Sort,
-					State:    module.State,
+			var rolesOut []*model.RoleOut
+			for _, role := range roles {
+				roleOut := model.RoleOut{
+					Key:   role.ID,
+					ID:    role.ID,
+					Title: role.Title,
+					State: role.State,
 				}
-				if module.ParentID > 0 {
-					for _, menu := range menus {
-						if module.ParentID == menu.ID {
-							moduleOut.ParentTitle = menu.Title
-							break
-						}
-					}
-				}
-				modulesOut = append(modulesOut, &moduleOut)
+
+				rolesOut = append(rolesOut, &roleOut)
 			}
-			page := app.ResponsePage{Page: pager.Page, PageSize: pager.PageSize, Total: totalRows, List: modulesOut}
+			page := app.ResponsePage{Page: pager.Page, PageSize: pager.PageSize, Total: totalRows, List: rolesOut}
 			response.ResponsePage(&page)
 		}
 	}
 }
 
-func GetModuleHandler(c *gin.Context) {
+func GetRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 	id, err := strconv.Atoi(c.Query("id"))
 	if err != nil || id <= 0 {
@@ -66,47 +52,35 @@ func GetModuleHandler(c *gin.Context) {
 		return
 	}
 
-	module, msg := service.GetModuleByID(id)
+	role, msg := service.GetRoleByID(id)
 	if msg.Code == message.Success {
-		moduleOut := model.ModuleOut{
-			ID:       module.ID,
-			ParentID: module.ParentID,
-			Title:    module.Title,
-			Name:     module.Name,
-			Router:   module.Router,
-			UIRouter: module.UIRouter,
-			Menu:     module.Menu,
-			Sort:     module.Sort,
-			State:    module.State,
+		roleOut := model.RoleOut{
+			ID:    role.ID,
+			Title: role.Title,
+			State: role.State,
 		}
-		msg.Result = moduleOut
+		msg.Result = roleOut
 		response.ToResponse(msg)
 	} else {
 		response.ToErrorResponse(msg)
 	}
 }
 
-func AddModuleHandler(c *gin.Context) {
+func AddRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	var moduleIn model.AddModuleIn
+	var roleIn model.AddRoleIn
 
-	msg := app.BindAndValid(c, &moduleIn, "form")
+	msg := app.BindAndValid(c, &roleIn, "form")
 	if msg.Code != message.Success {
 		response.ToErrorResponse(msg)
 		return
 	}
 
-	module := entity.Modules{
-		ParentID: moduleIn.ParentID,
-		Title:    moduleIn.Title,
-		Name:     moduleIn.Name,
-		Router:   moduleIn.Router,
-		UIRouter: moduleIn.UIRouter,
-		Menu:     moduleIn.Menu,
-		Sort:     moduleIn.Sort,
-		State:    moduleIn.State,
+	role := entity.Roles{
+		Title: roleIn.Title,
+		State: roleIn.State,
 	}
-	msgM := service.AddModule(&module)
+	msgM := service.AddRole(&role)
 	if msgM.Code == message.Success {
 		msg.Code = message.Success
 		msg.Msg = "添加成功"
@@ -117,29 +91,23 @@ func AddModuleHandler(c *gin.Context) {
 	}
 }
 
-func UpdateModuleHandler(c *gin.Context) {
+func UpdateRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	var moduleIn model.UpdateModuleIn
+	var roleIn model.UpdateRoleIn
 
-	msg := app.BindAndValid(c, &moduleIn, "form")
+	msg := app.BindAndValid(c, &roleIn, "form")
 	if msg.Code != message.Success {
 		response.ToErrorResponse(msg)
 		return
 	}
 
-	module := entity.Modules{
-		ID:       moduleIn.ID,
-		ParentID: moduleIn.ParentID,
-		Title:    moduleIn.Title,
-		Name:     moduleIn.Name,
-		Router:   moduleIn.Router,
-		UIRouter: moduleIn.UIRouter,
-		Menu:     moduleIn.Menu,
-		Sort:     moduleIn.Sort,
-		State:    moduleIn.State,
+	role := entity.Roles{
+		ID:    roleIn.ID,
+		Title: roleIn.Title,
+		State: roleIn.State,
 	}
 
-	msg = service.ModifyModule(&module)
+	msg = service.ModifyRole(&role)
 	if msg.Code == message.Success {
 		msg.Code = message.Success
 		msg.Msg = "修改成功"
@@ -150,20 +118,20 @@ func UpdateModuleHandler(c *gin.Context) {
 	}
 }
 
-func EnDisableModuleHandler(c *gin.Context) {
+func EnDisableRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	var moduleIn model.EnDisableModuleIn
+	var roleIn model.EnDisableRoleIn
 
-	msg := app.BindAndValid(c, &moduleIn, "form")
+	msg := app.BindAndValid(c, &roleIn, "form")
 	if msg.Code != message.Success {
 		response.ToErrorResponse(msg)
 		return
 	}
-	ids := []int{moduleIn.ID}
-	msgM := service.UpdateModuleState(ids, moduleIn.State)
+	ids := []int{roleIn.ID}
+	msgM := service.UpdateRoleState(ids, roleIn.State)
 	if msgM.Code == message.Success {
 		msgC := "启用成功"
-		if moduleIn.State == 2 {
+		if roleIn.State == 2 {
 			msgC = "禁用成功"
 		}
 		msg.Code = message.Success
@@ -175,19 +143,19 @@ func EnDisableModuleHandler(c *gin.Context) {
 	}
 }
 
-func BatchEnDisableModuleHandler(c *gin.Context) {
+func BatchEnDisableRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	var moduleIn model.BatchEnDisableModuleIn
+	var roleIn model.BatchEnDisableRoleIn
 
-	msg := app.BindAndValid(c, &moduleIn, "form")
+	msg := app.BindAndValid(c, &roleIn, "form")
 	if msg.Code != message.Success {
 		response.ToErrorResponse(msg)
 		return
 	}
-	msgM := service.UpdateModuleState(moduleIn.IDs, moduleIn.State)
+	msgM := service.UpdateRoleState(roleIn.IDs, roleIn.State)
 	if msgM.Code == message.Success {
 		msgC := "启用成功"
-		if moduleIn.State == 2 {
+		if roleIn.State == 2 {
 			msgC = "禁用成功"
 		}
 		msg.Code = message.Success
@@ -199,7 +167,7 @@ func BatchEnDisableModuleHandler(c *gin.Context) {
 	}
 }
 
-func DeleteModuleHandler(c *gin.Context) {
+func DeleteRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 	id, err := strconv.Atoi(c.Query("id"))
 
@@ -208,7 +176,7 @@ func DeleteModuleHandler(c *gin.Context) {
 		return
 	}
 
-	msg := service.DeleteModule(id)
+	msg := service.DeleteRole(id)
 	if msg.Code == message.Success {
 		msg.Code = message.Success
 		msg.Msg = "删除成功"
@@ -219,17 +187,17 @@ func DeleteModuleHandler(c *gin.Context) {
 	}
 }
 
-func BatchDeleteModuleHandler(c *gin.Context) {
+func BatchDeleteRoleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	var moduleIn model.BatchDeleteModuleIn
+	var roleIn model.BatchDeleteRoleIn
 
-	msg := app.BindAndValid(c, &moduleIn, "form")
+	msg := app.BindAndValid(c, &roleIn, "form")
 	if msg.Code != message.Success {
 		response.ToErrorResponse(msg)
 		return
 	}
 
-	msgM := service.BatchDeleteModule(moduleIn.IDs)
+	msgM := service.BatchDeleteRole(roleIn.IDs)
 	if msgM.Code == message.Success {
 		msg.Code = message.Success
 		msg.Msg = "删除成功"

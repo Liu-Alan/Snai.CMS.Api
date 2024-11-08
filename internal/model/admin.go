@@ -1,10 +1,10 @@
 package model
 
-type AdminsIn struct {
+type AdminIn struct {
 	UserName string `form:"user_name" validate:"max=32" label:"用户名"`
 }
 
-type AdminsOut struct {
+type AdminOut struct {
 	Key       int    `json:"key"`
 	ID        int    `json:"id"`
 	UserName  string `json:"user_name"`

@@ -224,7 +224,7 @@ func AdminLogin(loginIn *model.LoginIn, ip string) (*entity.Admins, *message.Mes
 		return nil, &err
 	}
 
-	role, _ := GetRole(admin.RoleID)
+	role, _ := GetRoleByID(admin.RoleID)
 	if role == nil || role.ID <= 0 || role.State == 2 {
 		err.Code = message.Error
 		err.Msg = "用户角色禁用"
@@ -510,13 +510,26 @@ func BatchDeleteModule(ids []int) *message.Message {
 	}
 }
 
-func GetRole(roleID int) (*entity.Roles, *message.Message) {
+func GetRoleByID(roleID int) (*entity.Roles, *message.Message) {
 	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
 
 	if roleID <= 0 {
 		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
 	}
-	role, _ := dao.GetRole(roleID)
+	role, _ := dao.GetRoleByID(roleID)
+	if role == nil || role.ID <= 0 {
+		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
+	}
+	return role, &err
+}
+
+func GetRoleByTitle(title string) (*entity.Roles, *message.Message) {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if strings.TrimSpace(title) == "" {
+		return nil, &message.Message{Code: message.InvalidParams, Msg: message.GetMsg(message.InvalidParams)}
+	}
+	role, _ := dao.GetRoleByTitle(title)
 	if role == nil || role.ID <= 0 {
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
@@ -532,6 +545,123 @@ func GetRoles(page, pageSize int) ([]*entity.Roles, *message.Message) {
 		return nil, &message.Message{Code: message.RecordNotFound, Msg: message.GetMsg(message.RecordNotFound)}
 	}
 	return roles, &err
+}
+
+func GetRoleCount() int64 {
+	count, _ := dao.GetRoleCount()
+	return count
+}
+
+func AddRole(role *entity.Roles) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if role != nil && strings.TrimSpace(role.Title) != "" {
+		_, errA := GetRoleByTitle(role.Title)
+		if errA.Code == message.Success {
+			err.Code = message.InvalidParams
+			err.Msg = "当前角色名已存在"
+			return &err
+		}
+		if errm := dao.AddRole(role); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "保存Role失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "保存Role失败"
+		return &err
+	}
+}
+
+func ModifyRole(role *entity.Roles) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if role != nil && role.ID > 0 {
+		reRole, _ := GetRoleByTitle(role.Title)
+		if reRole != nil && role.ID != reRole.ID {
+			err.Code = message.InvalidParams
+			err.Msg = "角色名重复"
+			return &err
+		} else {
+			if errm := dao.ModifyRole(role); errm != nil {
+				logging.Error(errm.Error())
+				err.Code = message.InvalidParams
+				err.Msg = "角色修改失败"
+				return &err
+			}
+
+			return &err
+		}
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "角色不存在"
+		return &err
+	}
+}
+
+func UpdateRoleState(ids []int, state int8) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if len(ids) > 0 {
+		if errm := dao.UpdateRoleState(ids, state); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "角色更新失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "没有选择任何列"
+		return &err
+	}
+}
+
+func DeleteRole(id int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if id > 0 {
+		role := entity.Roles{
+			ID: id,
+		}
+
+		if errm := dao.DeleteRole(&role); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "角色删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "角色不存在"
+		return &err
+	}
+}
+
+func BatchDeleteRole(ids []int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if len(ids) > 0 {
+		if errm := dao.BatchDeleteRole(ids); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "角色删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "没有选择任何列"
+		return &err
+	}
 }
 
 func GetRoleModule(roleID int, moduleID int) (*entity.RoleModule, *message.Message) {
@@ -573,7 +703,7 @@ func VerifyUserRole(userName string, router string) *message.Message {
 		return &message.Message{Code: message.RecordNotFound, Msg: "账号已禁用"}
 	}
 
-	role, err := GetRole(admin.RoleID)
+	role, err := GetRoleByID(admin.RoleID)
 	if err.Code == message.RecordNotFound {
 		return &message.Message{Code: message.RecordNotFound, Msg: "角色不存在"}
 	}
