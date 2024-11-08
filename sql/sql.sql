@@ -42,7 +42,7 @@ CREATE TABLE tokens(
 )
 ;
 		
-ALTER TABLE tokens ADD INDEX ix_tokens_user_id_state(user_id,state)
+ALTER TABLE tokens ADD INDEX ix_tokens_token(token)
 ;
 
 CREATE TABLE modules(
