@@ -336,3 +336,18 @@ func GetRoleModules(roleID int) ([]*entity.RoleModule, error) {
 	}
 	return roleModules, nil
 }
+
+func DeleteRoleModules(roleID int) error {
+	var roleModule entity.RoleModule
+	if err := _cmsdb.Delete(&roleModule, "role_id = ?", roleID).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func AddRoleModules(roleModules []*entity.RoleModule) error {
+	if err := _cmsdb.Create(&roleModules).Error; err != nil {
+		return err
+	}
+	return nil
+}

@@ -31,3 +31,8 @@ type BatchEnDisableRoleIn struct {
 type BatchDeleteRoleIn struct {
 	IDs []int `form:"ids[]" validate:"min=1,dive,gte=1" label:"ids"`
 }
+
+type AssignPermIn struct {
+	RoleID    int   `form:"role_id" validate:"gte=1" label:"角色id"`
+	ModuleIDs []int `form:"module_ids[]" validate:"min=1,dive,gte=1" label:"模块ids"`
+}

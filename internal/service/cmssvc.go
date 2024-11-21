@@ -737,3 +737,49 @@ func VerifyUserRole(userName string, router string) *message.Message {
 
 	return err
 }
+
+func DeleteRoleModules(roleID int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if roleID > 0 {
+		if errm := dao.DeleteRoleModules(roleID); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "权限删除失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "角色不存在"
+		return &err
+	}
+}
+
+func AddRoleModules(roleID int, moduleIDs []int) *message.Message {
+	err := message.Message{Code: message.Success, Msg: message.GetMsg(message.Success)}
+
+	if roleID > 0 && moduleIDs != nil && len(moduleIDs) > 0 {
+		var roleModules []*entity.RoleModule
+		for _, moduleID := range moduleIDs {
+			roleModule := entity.RoleModule{
+				RoleID:   roleID,
+				ModuleID: moduleID,
+			}
+			roleModules = append(roleModules, &roleModule)
+		}
+		if errm := dao.AddRoleModules(roleModules); errm != nil {
+			logging.Error(errm.Error())
+			err.Code = message.InvalidParams
+			err.Msg = "保存权限失败"
+			return &err
+		}
+
+		return &err
+	} else {
+		err.Code = message.InvalidParams
+		err.Msg = "保存权限失败"
+		return &err
+	}
+}

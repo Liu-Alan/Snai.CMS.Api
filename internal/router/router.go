@@ -40,6 +40,7 @@ func NewRouter() *gin.Engine {
 	rja.POST("/admin/batchdelete", api.BatchDeleteAdminHandler)
 
 	rja.GET("/module/list", api.ModulesHandler)
+	rja.GET("/module/getlist", api.GetModulesHandler)
 	rja.GET("/module/get", api.GetModuleHandler)
 	rja.POST("/module/add", api.AddModuleHandler)
 	rja.POST("/module/update", api.UpdateModuleHandler)
@@ -56,6 +57,9 @@ func NewRouter() *gin.Engine {
 	rja.POST("/role/batchendisable", api.BatchEnDisableRoleHandler)
 	rja.GET("/role/delete", api.DeleteRoleHandler)
 	rja.POST("/role/batchdelete", api.BatchDeleteRoleHandler)
+
+	rja.GET("/role/rolemodules", api.RoleModulesHandler)
+	rja.POST("/role/assignperm", api.AssignPermHandler)
 
 	return r
 }

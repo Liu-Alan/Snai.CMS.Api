@@ -207,3 +207,46 @@ func BatchDeleteRoleHandler(c *gin.Context) {
 		response.ToErrorResponse(msg)
 	}
 }
+
+func RoleModulesHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	roleID, err := strconv.Atoi(c.Query("role_id"))
+	if err != nil || roleID <= 0 {
+		response.ToErrorResponse(&message.Message{Code: message.BindParamsError, Msg: message.GetMsg(message.BindParamsError)})
+		return
+	}
+
+	roleModules, msg := service.GetRoleModules(roleID)
+	if msg.Code == message.Success {
+		var modules []int
+		for _, module := range roleModules {
+			modules = append(modules, module.ModuleID)
+		}
+		msg.Result = modules
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
+func AssignPermHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+	var permIn model.AssignPermIn
+
+	msg := app.BindAndValid(c, &permIn, "form")
+	if msg.Code != message.Success {
+		response.ToErrorResponse(msg)
+		return
+	}
+
+	service.DeleteRoleModules(permIn.RoleID)
+	msgM := service.AddRoleModules(permIn.RoleID, permIn.ModuleIDs)
+	if msgM.Code == message.Success {
+		msg.Code = message.Success
+		msg.Msg = "分配权限成功"
+		msg.Result = nil
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}

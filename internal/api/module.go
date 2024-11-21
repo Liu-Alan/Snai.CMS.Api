@@ -58,6 +58,32 @@ func ModulesHandler(c *gin.Context) {
 	}
 }
 
+func GetModulesHandler(c *gin.Context) {
+	response := app.NewResponse(c)
+
+	modules, msg := service.GetModules(0, 0)
+	if msg.Code == message.Success {
+		var modulesOut []*model.ModuleOut
+		for _, module := range modules {
+			if module.State == 1 {
+				moduleOut := model.ModuleOut{
+					ID:       module.ID,
+					ParentID: module.ParentID,
+					Title:    module.Title,
+					Name:     module.Name,
+					Menu:     module.Menu,
+				}
+				modulesOut = append(modulesOut, &moduleOut)
+			}
+		}
+
+		msg.Result = modulesOut
+		response.ToResponse(msg)
+	} else {
+		response.ToErrorResponse(msg)
+	}
+}
+
 func GetModuleHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 	id, err := strconv.Atoi(c.Query("id"))
