@@ -9,11 +9,12 @@ USE snai_cms
 ;
 
 CREATE TABLE admins(
-	id INT AUTO_INCREMENT PRIMARY KEY,			-- 自增列需为主键
+	id INT AUTO_INCREMENT PRIMARY KEY,				-- 自增列需为主键
 	user_name NVARCHAR(32) NOT NULL,
 	`password` VARCHAR(32) NOT NULL,
 	role_id INT NOT NULL,
-	state TINYINT NOT NULL DEFAULT 1,			-- 1 启用，2 禁用
+	state TINYINT NOT NULL DEFAULT 1,				-- 1 启用，2 禁用
+	otp_secret NVARCHAR(64) NOT NULL DEFAULT '',	-- otp密钥
 	create_time INT NOT NULL DEFAULT 0,
 	update_time INT NOT NULL DEFAULT 0,
 	last_logon_time INT NOT NULL DEFAULT 0,
@@ -29,8 +30,8 @@ ALTER TABLE admins ADD UNIQUE INDEX ix_admins_user_name(user_name)  	-- UNIQUE I
 ;
 
 -- password:snai2024，保存时加盐md5(盐+password)
-INSERT into admins(user_name,`password`,role_id,state,create_time)
-VALUES('snai','86a6553dc16e23a7bb34b4306415c206',1,1,1550937600)
+INSERT into admins(user_name,`password`,role_id,state,otp_secret,create_time)
+VALUES('snai','86a6553dc16e23a7bb34b4306415c206',1,1,'IFLDIRSPINAU4NKHKRMEIU2VGIZFUOBVKJKUKOCRGE3DKRCCGJGA====',1550937600)
 ;
 
 CREATE TABLE tokens(
