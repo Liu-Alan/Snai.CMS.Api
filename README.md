@@ -20,8 +20,8 @@
     首次使用时需绑定管理员账号获取otp动态码，以后管理员可以通过 "用户管理">"opt码" 来扫码添加：  
     1. 下载安装验证器  
        IOS：AppStore搜索 Google Authenticator 下载安装  
-       Android：应用市场搜索 Authenticator 或 
-                Google Play搜索 Google Authenticator 下载安装  
+       Android：应用市场搜索 Authenticator 或  
+                Google Play搜索 Authenticator 下载安装  
     2. 验证器扫码绑定使用说明  
        IOS：打开"Google Authenticator"app，右下角"＋">"输入设置密钥"或"扫描二维码"  
        Android：打开"Authenticator"app  
