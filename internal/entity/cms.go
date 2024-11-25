@@ -6,6 +6,7 @@ type Admins struct {
 	Password        string `gorm:"column:password"`
 	RoleID          int    `gorm:"column:role_id"`
 	State           int8   `gorm:"column:state"`
+	OtpSecret       string `gorm:"column:otp_secret"`
 	CreateTime      int    `gorm:"column:create_time"`
 	UpdateTime      int    `gorm:"column:update_time"`
 	LastLogonTime   int    `gorm:"column:last_logon_time"`

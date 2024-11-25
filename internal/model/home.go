@@ -3,6 +3,7 @@ package model
 type LoginIn struct {
 	UserName string `form:"user_name" validate:"required,max=32" label:"用户名"`
 	Password string `form:"password" validate:"required" label:"密码"`
+	OtpCode  string `form:"otp_code" validate:"required,len=6" label:"Otp动态码"`
 }
 
 type LoginOut struct {

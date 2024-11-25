@@ -1,6 +1,7 @@
 package api
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
@@ -26,8 +27,25 @@ func LoginHandler(c *gin.Context) {
 	}
 
 	ip := c.ClientIP()
+	otpCode, errO := strconv.Atoi(loginIn.OtpCode)
+	if errO != nil {
+		msg.Code = message.ValidParamsError
+		msg.Msg = message.GetMsg(message.ValidParamsError)
+		msg.Result = "Otp动态码为6位数字"
+		response.ToErrorResponse(msg)
+		return
+	}
+
 	admin, err := service.AdminLogin(&loginIn, ip)
 	if err.Code == message.Success {
+		otpVerify := app.OtpVerifyCode(admin.OtpSecret, int32(otpCode))
+		if !otpVerify {
+			msg.Code = message.Error
+			msg.Msg = "Otp动态码错误"
+			response.ToErrorResponse(msg)
+			return
+		}
+
 		token, err := app.GenerateToken(loginIn.UserName)
 		if err != nil {
 			logging.Error("app.GenerateToken err: %v", err)

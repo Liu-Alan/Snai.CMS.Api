@@ -101,11 +101,13 @@ func AddAdminHandler(c *gin.Context) {
 	}
 
 	adminIn.Password = strings.ToLower(utils.EncodeMD5(config.AppConf.PwdSalt + strings.TrimSpace(adminIn.Password)))
+	optSecret := app.OtpSecret()
 	admin := entity.Admins{
 		UserName:   adminIn.UserName,
 		Password:   adminIn.Password,
 		RoleID:     adminIn.RoleID,
 		State:      adminIn.State,
+		OtpSecret:  optSecret,
 		CreateTime: int(time.Now().Unix()),
 	}
 	msgM := service.AddAdmin(&admin)
@@ -260,5 +262,30 @@ func BatchDeleteAdminHandler(c *gin.Context) {
 		response.ToResponse(msg)
 	} else {
 		response.ToErrorResponse(msg)
+	}
+}
+
+func GetAdminQrcodeHandler(c *gin.Context) {
+	id, err := strconv.Atoi(c.Query("id"))
+	if err != nil || id <= 0 {
+		c.Data(message.BindParamsError, "image/png", nil)
+		return
+	}
+
+	admin, msg := service.GetAdminByID(id)
+	if msg.Code == message.Success {
+		if strings.TrimSpace(admin.OtpSecret) != "" {
+			otpQr := app.OtpQrcode(config.AppConf.JwtIssuer, admin.UserName, admin.OtpSecret)
+			otpBy := app.QrcodeEncode(otpQr, 200)
+			if otpBy != nil {
+				c.Data(message.Success, "image/png", otpBy)
+			} else {
+				c.Data(message.Error, "image/png", nil)
+			}
+		} else {
+			c.Data(message.Error, "image/png", nil)
+		}
+	} else {
+		c.Data(message.Error, "image/png", nil)
 	}
 }

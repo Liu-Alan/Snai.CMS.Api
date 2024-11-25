@@ -38,6 +38,7 @@ func NewRouter() *gin.Engine {
 	rja.GET("/admin/unlock", api.UnlockAdminHandler)
 	rja.GET("/admin/delete", api.DeleteAdminHandler)
 	rja.POST("/admin/batchdelete", api.BatchDeleteAdminHandler)
+	rja.GET("/admin/qrcode", api.GetAdminQrcodeHandler)
 
 	rja.GET("/module/list", api.ModulesHandler)
 	rja.GET("/module/getlist", api.GetModulesHandler)
