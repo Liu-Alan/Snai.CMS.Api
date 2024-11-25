@@ -275,7 +275,7 @@ func GetAdminQrcodeHandler(c *gin.Context) {
 	admin, msg := service.GetAdminByID(id)
 	if msg.Code == message.Success {
 		if strings.TrimSpace(admin.OtpSecret) != "" {
-			otpQr := app.OtpQrcode(config.AppConf.JwtIssuer, admin.UserName, admin.OtpSecret)
+			otpQr := app.OtpQrcode(config.AppConf.JwtIssuer, admin.UserName, strings.TrimRight(admin.OtpSecret, "="))
 			otpBy := app.QrcodeEncode(otpQr, 200)
 			if otpBy != nil {
 				c.Data(message.Success, "image/png", otpBy)
