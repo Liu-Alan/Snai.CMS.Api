@@ -14,7 +14,8 @@
     ----------------添/删/改等账号  
 
 ### 账密与密钥  
-    默认的用户名：snai，密码：snai2024，otp密钥：IFLDIRSPINAU4NKHKRMEIU2VGIZFUOBVKJKUKOCRGE3DKRCCGJGA====  
+    默认的用户名：snai，密码：snai2024  
+    otp密钥：IFLDIRSPINAU4NKHKRMEIU2VGIZFUOBVKJKUKOCRGE3DKRCCGJGA====  
 
 **对应前端仓库：** [https://github.com/Liu-Alan/Snai.CMS.UI](https://github.com/Liu-Alan/Snai.CMS.UI)  
 
