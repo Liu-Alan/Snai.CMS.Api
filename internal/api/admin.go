@@ -7,6 +7,7 @@ import (
 
 	"Snai.CMS.Api/common/app"
 	"Snai.CMS.Api/common/config"
+	"Snai.CMS.Api/common/logging"
 	"Snai.CMS.Api/common/message"
 	"Snai.CMS.Api/common/utils"
 	"Snai.CMS.Api/internal/entity"
@@ -276,6 +277,7 @@ func GetAdminQrcodeHandler(c *gin.Context) {
 	if msg.Code == message.Success {
 		if strings.TrimSpace(admin.OtpSecret) != "" {
 			otpQr := app.OtpQrcode(config.AppConf.JwtIssuer, admin.UserName, strings.TrimRight(admin.OtpSecret, "="))
+			logging.Info(otpQr)
 			otpBy := app.QrcodeEncode(otpQr, 200)
 			if otpBy != nil {
 				c.Data(message.Success, "image/png", otpBy)
