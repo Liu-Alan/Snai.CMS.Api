@@ -13,10 +13,10 @@ var MsgInfo = map[int]string{
 	PermissionFailed: "没有权限",
 
 	RequestError:     "请求错误",
-	AuthCheckFail:    "校验Authorization失败",
-	AuthNotExist:     "缺少头部参数Authorization",
-	AuthCheckTimeout: "Authorization超时",
-	AuthFormatFail:   "Authorization格式错误",
+	AuthCheckFail:    "Token校验失败",
+	AuthNotExist:     "缺少Token",
+	AuthCheckTimeout: "Token超时",
+	AuthFormatFail:   "Token格式错误",
 
 	RecordNotFound: "记录不存在",
 }
