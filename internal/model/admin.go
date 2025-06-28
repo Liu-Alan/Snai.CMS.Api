@@ -16,7 +16,7 @@ type AdminOut struct {
 
 type AddAdminIn struct {
 	UserName  string `form:"user_name" validate:"required,max=32" label:"用户名"`
-	Password  string `form:"password" validate:"max=20,min=6" label:"密码"`
+	Password  string `form:"password" validate:"passwd" label:"密码"`
 	Password2 string `form:"password2" validate:"eqfield=Password" label:"确认密码"`
 	RoleID    int    `form:"role_id" validate:"gte=1" label:"角色"`
 	State     int8   `form:"state" validate:"oneof=1 2" label:"状态"`
@@ -25,7 +25,7 @@ type AddAdminIn struct {
 type UpdateAdminIn struct {
 	ID        int    `form:"id" validate:"gte=1" label:"ID"`
 	UserName  string `form:"user_name" validate:"required,max=32" label:"用户名"`
-	Password  string `form:"password" validate:"max=20,min=6" label:"密码"`
+	Password  string `form:"password" validate:"passwdex" label:"密码"`
 	Password2 string `form:"password2" validate:"eqfield=Password" label:"确认密码"`
 	RoleID    int    `form:"role_id" validate:"gte=1" label:"角色"`
 	State     int8   `form:"state" validate:"oneof=1 2" label:"状态"`

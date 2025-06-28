@@ -2,7 +2,9 @@ package app
 
 import (
 	"reflect"
+	"regexp"
 	"strings"
+	"unicode"
 
 	"Snai.CMS.Api/common/logging"
 	"Snai.CMS.Api/common/message"
@@ -12,6 +14,55 @@ import (
 	"github.com/go-playground/validator/v10"
 	zhTrans "github.com/go-playground/validator/v10/translations/zh"
 )
+
+// 自定义校验函数 密码 必须包含至少一个字母和一个数字
+func passwordValidator(fl validator.FieldLevel) bool {
+	password := fl.Field().String()
+
+	// 正则判断是否包含空白，长度是否在6-20
+	if !regexp.MustCompile(`^\S{6,20}$`).MatchString(password) {
+		return false
+	}
+
+	hasLetter := false
+	hasDigit := false
+
+	for _, r := range password {
+		if unicode.IsLetter(r) {
+			hasLetter = true
+		} else if unicode.IsDigit(r) {
+			hasDigit = true
+		}
+	}
+
+	return hasLetter && hasDigit
+}
+
+// 自定义校验函数 密码 排除******
+func passwordValidatorEx(fl validator.FieldLevel) bool {
+	password := fl.Field().String()
+	if password == "******" || strings.TrimSpace(password) == "" {
+		return true
+	}
+
+	// 正则判断是否包含空白，长度是否在6-20
+	if !regexp.MustCompile(`^\S{6,20}$`).MatchString(password) {
+		return false
+	}
+
+	hasLetter := false
+	hasDigit := false
+
+	for _, r := range password {
+		if unicode.IsLetter(r) {
+			hasLetter = true
+		} else if unicode.IsDigit(r) {
+			hasDigit = true
+		}
+	}
+
+	return hasLetter && hasDigit
+}
 
 var G_Validate *validateCtx
 
@@ -25,6 +76,10 @@ func InitValidator() {
 	// 中文翻译器
 	uniTrans := ut.New(zh.New())
 	trans, _ := uniTrans.GetTranslator("zh")
+
+	// 注册自定义校验器
+	validate.RegisterValidation("passwd", passwordValidator)
+	validate.RegisterValidation("passwdex", passwordValidatorEx)
 
 	//通过自定义标签label来替换字段名
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
@@ -47,7 +102,9 @@ func InitValidator() {
 func (vc *validateCtx) GetError(errs error) []string {
 	var errStr []string
 	for _, err := range errs.(validator.ValidationErrors) {
-		if vc.trans != nil {
+		if err.Tag() == "passwd" || err.Tag() == "passwdex" {
+			errStr = append(errStr, "密码必须包含字母和数字，且长度6-20位")
+		} else if vc.trans != nil {
 			errStr = append(errStr, strings.Replace(err.Translate(vc.trans), "Password", "密码", -1))
 		} else {
 			errStr = append(errStr, err.Field()+"验证不符合"+err.Tag())

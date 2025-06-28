@@ -13,7 +13,7 @@ type LoginOut struct {
 
 type ChangePasswordIn struct {
 	OldPassword string `form:"old_password" validate:"required" label:"旧密码"`
-	Password    string `form:"password" validate:"max=20,min=6" label:"新密码"`
+	Password    string `form:"password" validate:"passwd" label:"新密码"`
 	Password2   string `form:"password2" validate:"eqfield=Password" label:"确认密码"`
 }
 
