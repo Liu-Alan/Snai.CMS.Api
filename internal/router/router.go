@@ -5,6 +5,7 @@ import (
 
 	"Snai.CMS.Api/common/config"
 	"Snai.CMS.Api/internal/api"
+	"Snai.CMS.Api/internal/common"
 	"Snai.CMS.Api/internal/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -20,8 +21,10 @@ func NewRouter() *gin.Engine {
 
 	r.POST("/api/home/login", api.LoginHandler)
 
+	rs := r.Group("/static").Use(middleware.Jwt())
+	rs.StaticFS("/upload", common.NoListFS{FS: http.Dir(config.AppConf.FileHost + "/upload")})
+
 	rj := r.Group("/api").Use(middleware.Jwt())
-	rj.StaticFS("/static", http.Dir(config.AppConf.FileHost+"/file"))
 	rj.GET("/home/menu", api.MenuHandler)
 	rj.GET("/home/role", api.RoleHandler)
 
