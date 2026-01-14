@@ -57,14 +57,14 @@ func GetAdmins(userName string, pageOffset, pageSize int) ([]*entity.Admins, err
 }
 
 func AddAdmin(admin *entity.Admins) error {
-	if err := _cmsdb.Create(&admin).Error; err != nil {
+	if err := _cmsdb.Create(admin).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func ModifyAdmin(admin *entity.Admins) error {
-	if err := _cmsdb.Save(&admin).Error; err != nil {
+	if err := _cmsdb.Save(admin).Error; err != nil {
 		return err
 	}
 	return nil
@@ -87,7 +87,7 @@ func UnlockAdmin(id int) error {
 }
 
 func DeleteAdmin(admin *entity.Admins) error {
-	if err := _cmsdb.Delete(&admin).Error; err != nil {
+	if err := _cmsdb.Delete(admin).Error; err != nil {
 		return err
 	}
 	return nil
@@ -112,14 +112,14 @@ func GetToken(token string) (*entity.Tokens, error) {
 }
 
 func AddToken(token *entity.Tokens) error {
-	if err := _cmsdb.Create(&token).Error; err != nil {
+	if err := _cmsdb.Create(token).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func ModifyToken(token *entity.Tokens) error {
-	if err := _cmsdb.Save(&token).Error; err != nil {
+	if err := _cmsdb.Save(token).Error; err != nil {
 		return err
 	}
 	return nil
@@ -200,14 +200,14 @@ func GetModuleCount() (int64, error) {
 }
 
 func AddModule(module *entity.Modules) error {
-	if err := _cmsdb.Create(&module).Error; err != nil {
+	if err := _cmsdb.Create(module).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func ModifyModule(module *entity.Modules) error {
-	if err := _cmsdb.Save(&module).Error; err != nil {
+	if err := _cmsdb.Save(module).Error; err != nil {
 		return err
 	}
 	return nil
@@ -222,7 +222,7 @@ func UpdateModuleState(ids []int, state int8) error {
 }
 
 func DeleteModule(module *entity.Modules) error {
-	if err := _cmsdb.Delete(&module).Error; err != nil {
+	if err := _cmsdb.Delete(module).Error; err != nil {
 		return err
 	}
 	return nil
@@ -281,14 +281,14 @@ func GetRoleCount() (int64, error) {
 }
 
 func AddRole(role *entity.Roles) error {
-	if err := _cmsdb.Create(&role).Error; err != nil {
+	if err := _cmsdb.Create(role).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func ModifyRole(role *entity.Roles) error {
-	if err := _cmsdb.Save(&role).Error; err != nil {
+	if err := _cmsdb.Save(role).Error; err != nil {
 		return err
 	}
 	return nil
@@ -303,7 +303,7 @@ func UpdateRoleState(ids []int, state int8) error {
 }
 
 func DeleteRole(role *entity.Roles) error {
-	if err := _cmsdb.Delete(&role).Error; err != nil {
+	if err := _cmsdb.Delete(role).Error; err != nil {
 		return err
 	}
 	return nil
@@ -346,7 +346,7 @@ func DeleteRoleModules(roleID int) error {
 }
 
 func AddRoleModules(roleModules []*entity.RoleModule) error {
-	if err := _cmsdb.Create(&roleModules).Error; err != nil {
+	if err := _cmsdb.Create(roleModules).Error; err != nil {
 		return err
 	}
 	return nil
