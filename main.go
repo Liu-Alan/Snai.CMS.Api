@@ -33,5 +33,7 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 
 	r := router.NewRouter()
-	r.Run(":" + config.AppConf.Port)
+	if err := r.Run(":" + config.AppConf.Port); err != nil {
+		logging.Error("gin run failed: %v", err)
+	}
 }
