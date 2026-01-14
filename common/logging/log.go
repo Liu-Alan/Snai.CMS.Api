@@ -162,7 +162,7 @@ func (x *Logger) getLogTextInner(format string, v ...interface{}) string {
 
 func (x *Logger) getLogText(level int, format string, v ...interface{}) string {
 	txt := x.getLogTextInner(format, v...)
-	return fmt.Sprintf("%v [%v] %v", time.Now().Format("15:04:05"), _logLevels[level], txt)
+	return fmt.Sprintf("%v [%v] %v", time.Now().Format("2006-01-02 15:04:05"), _logLevels[level], txt)
 }
 
 func (x *Logger) init() {
