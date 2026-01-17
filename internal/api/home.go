@@ -78,7 +78,7 @@ func LoginHandler(c *gin.Context) {
 
 func LogoutHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	token := c.MustGet("token").(string)
+	token, _ := utils.GetGinContextByKey(c, "token")
 	tk, msg := service.GetToken(token)
 	if msg.Code != message.Success {
 		response.ToErrorResponse(msg)
@@ -96,7 +96,7 @@ func LogoutHandler(c *gin.Context) {
 func ChangePasswordHandler(c *gin.Context) {
 	response := app.NewResponse(c)
 	var passwordIn model.ChangePasswordIn
-	user_name := c.MustGet("user_name").(string)
+	user_name, _ := utils.GetGinContextByKey(c, "user_name")
 
 	msg := app.BindAndValid(c, &passwordIn, "form")
 	if msg.Code != message.Success {
@@ -131,7 +131,7 @@ func ChangePasswordHandler(c *gin.Context) {
 
 func MenuHandler(c *gin.Context) {
 	response := app.NewResponse(c)
-	user_name := c.MustGet("user_name").(string)
+	user_name, _ := utils.GetGinContextByKey(c, "user_name")
 
 	admin, msg := service.GetAdmin(user_name)
 	if msg.Code != message.Success {
