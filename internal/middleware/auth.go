@@ -12,12 +12,12 @@ import (
 
 func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		use_rnam, _ := utils.GetGinContextByKey(c, "user_name")
+		userName, _ := utils.GetGinContextByKey(c, "user_name")
 		token, _ := utils.GetGinContextByKey(c, "token")
 		router := c.Request.URL.Path
 		router = replaceRoute(router)
 
-		err := service.VerifyUserRole(use_rnam, router)
+		err := service.VerifyUserRole(userName, router)
 		if err.Code != message.Success {
 			response := app.NewResponse(c)
 			response.ToErrorResponse(err)
@@ -25,7 +25,7 @@ func Auth() gin.HandlerFunc {
 			return
 		}
 
-		c.Set("user_name", use_rnam)
+		c.Set("user_name", userName)
 		c.Set("token", token)
 		c.Next()
 	}
