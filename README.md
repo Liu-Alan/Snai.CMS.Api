@@ -1,5 +1,5 @@
 ## 内容管理Api  
-#### 技术栈  
+#### 技术栈   
     Go，Gin，Gorm，Mysql，Docker，JWT，跨域，Log，模型绑定，Validator，权限判断，分页，OTP动态码登录  
 
 #### 功能  
